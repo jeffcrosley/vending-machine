@@ -1,6 +1,6 @@
 package com.techelevator.view;
 
-public class Inventory {
+public class StockedItem {
 	// PRIVATE MEMBERS
 	private Item item;
 	private int itemsInStock;
@@ -15,7 +15,7 @@ public class Inventory {
 	}
 	
 	// CTOR
-	public Inventory(Item item) {
+	public StockedItem(Item item) {
 		this.item = item;
 		this.itemsInStock = 5;
 	}
