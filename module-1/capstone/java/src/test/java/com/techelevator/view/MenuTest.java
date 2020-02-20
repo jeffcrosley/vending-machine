@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 
-import com.techelevator.view.Menu;
+import com.techelevator.view.REFERENCEMenu;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MenuTest {
@@ -24,7 +24,7 @@ public class MenuTest {
 	@Test
 	public void displays_a_list_of_menu_options_and_prompts_user_to_make_a_choice() {
 		Object[] options = new Object[] { new Integer(3), "Blind", "Mice" };
-		Menu menu = getMenuForTesting();
+		REFERENCEMenu menu = getMenuForTesting();
 
 		menu.getChoiceFromOptions(options);
 
@@ -37,7 +37,7 @@ public class MenuTest {
 	public void returns_object_corresponding_to_user_choice() {
 		Integer expected = new Integer(456);
 		Integer[] options = new Integer[] { new Integer(123), expected, new Integer(789) };
-		Menu menu = getMenuForTestingWithUserInput("2\n");
+		REFERENCEMenu menu = getMenuForTestingWithUserInput("2\n");
 
 		Integer result = (Integer) menu.getChoiceFromOptions(options);
 
@@ -47,7 +47,7 @@ public class MenuTest {
 	@Test
 	public void redisplays_menu_if_user_does_not_choose_valid_option() {
 		Object[] options = new Object[] { "Larry", "Curly", "Moe" };
-		Menu menu = getMenuForTestingWithUserInput("4\n1\n");
+		REFERENCEMenu menu = getMenuForTestingWithUserInput("4\n1\n");
 
 		menu.getChoiceFromOptions(options);
 
@@ -62,7 +62,7 @@ public class MenuTest {
 	@Test
 	public void redisplays_menu_if_user_chooses_option_less_than_1() {
 		Object[] options = new Object[] { "Larry", "Curly", "Moe" };
-		Menu menu = getMenuForTestingWithUserInput("0\n1\n");
+		REFERENCEMenu menu = getMenuForTestingWithUserInput("0\n1\n");
 
 		menu.getChoiceFromOptions(options);
 
@@ -77,7 +77,7 @@ public class MenuTest {
 	@Test
 	public void redisplays_menu_if_user_enters_garbage() {
 		Object[] options = new Object[] { "Larry", "Curly", "Moe" };
-		Menu menu = getMenuForTestingWithUserInput("Mickey Mouse\n1\n");
+		REFERENCEMenu menu = getMenuForTestingWithUserInput("Mickey Mouse\n1\n");
 
 		menu.getChoiceFromOptions(options);
 
@@ -89,12 +89,12 @@ public class MenuTest {
 		Assert.assertEquals(expected, output.toString());
 	}
 
-	private Menu getMenuForTestingWithUserInput(String userInput) {
+	private REFERENCEMenu getMenuForTestingWithUserInput(String userInput) {
 		ByteArrayInputStream input = new ByteArrayInputStream(String.valueOf(userInput).getBytes());
-		return new Menu(input, output);
+		return new REFERENCEMenu(input, output);
 	}
 
-	private Menu getMenuForTesting() {
+	private REFERENCEMenu getMenuForTesting() {
 		return getMenuForTestingWithUserInput("1\n");
 	}
 }

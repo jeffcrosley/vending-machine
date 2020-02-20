@@ -1,6 +1,6 @@
 package com.techelevator;
 
-import com.techelevator.view.Menu;
+import com.techelevator.view.REFERENCEMenu;
 
 public class VendingMachineCLI {
 
@@ -8,9 +8,9 @@ public class VendingMachineCLI {
 	private static final String MAIN_MENU_OPTION_PURCHASE = "Purchase";
 	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE };
 
-	private Menu menu;
+	private REFERENCEMenu menu;
 
-	public VendingMachineCLI(Menu menu) {
+	public VendingMachineCLI(REFERENCEMenu menu) {
 		this.menu = menu;
 	}
 
@@ -27,7 +27,7 @@ public class VendingMachineCLI {
 	}
 
 	public static void main(String[] args) {
-		Menu menu = new Menu(System.in, System.out);
+		REFERENCEMenu menu = new REFERENCEMenu(System.in, System.out);
 		VendingMachineCLI cli = new VendingMachineCLI(menu);
 		cli.run();
 	}

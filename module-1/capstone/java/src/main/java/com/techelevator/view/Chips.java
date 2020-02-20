@@ -1,10 +1,10 @@
 package com.techelevator.view;
-import java.util.Map;
-import java.util.TreeMap;
 
-public class Chips extends Item
-{
-	private Map<String, Integer> chipInventory = new TreeMap<>();
-
+public class Chips extends Item {
+	// CTOR
+	public Chips(String name, String slot, double price) {
+		super(name, slot, price);
+		this.type = "Chips";
+		this.sound = "Crunch Crunch, Yum!";
 	}
 }

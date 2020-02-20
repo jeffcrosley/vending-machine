@@ -1,12 +1,41 @@
 package com.techelevator.view;
 
-public class VendingMachine implements IVendingMachine
-{
+import java.io.File;
+import java.util.Map;
+
+public class VendingMachine implements IVendingMachine {
 	
-	public static void main(String[] args) 
-	{
-		stockInventory();
+	// PRIVATE METHODS
+	private Map<String, Inventory> inventory;
+	
+	// GETS AND SETS
+	public Map<String, Inventory> getInventory() {
+		return inventory;
+	}
+
+	// CTOR
+	public VendingMachine() {
 		
-		Map<Item, Integer> 
+	}	
+	
+	// PUBLIC METHODS
+	public String purchaseProduct() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void stopProgram() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public File generateSalesReport() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Map<String, Inventory> fillMachine(File inputFile) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
