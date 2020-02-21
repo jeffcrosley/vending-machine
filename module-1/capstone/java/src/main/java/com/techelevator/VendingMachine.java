@@ -5,16 +5,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.TreeMap;
 
 public class VendingMachine {
 	
+	private double budget;
 	// PRIVATE METHODS
 	private Map<String, StockedItem> inventory = new TreeMap<String, StockedItem>();
 	
 	// GETS AND SETS
-	public Map<String, StockedItem> getInventory() {
+	public Map<String, StockedItem> getInventory() 
+	{
 		return inventory;
 	}
 
@@ -70,7 +73,7 @@ public class VendingMachine {
 			
 			inventory.put(slot, item);
 		}		
-		
 		fileScanner.close();
 	}
+	
 }

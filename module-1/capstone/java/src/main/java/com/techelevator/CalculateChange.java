@@ -12,28 +12,31 @@ public class CalculateChange
 	public CalculateChange() {}
 	
 	// PUBLIC METHODS
-	public void insertMoney() // pass a Logger object into this (same instance as in our VendingMachine), maybe store as private variable
+	public void insertMoney(Scanner scanner) // pass a Logger object into this (same instance as in our VendingMachine), maybe store as private variable
 	{
 		int totalMoneyInserted = 0;
 		
-		try(Scanner scanner = new Scanner(System.in))
+		try
 		{	
 			String yesNoAnswer = "";
 			do
 			{
 				totalMoneyInserted += insertMoneyPrompt(scanner);
-				
 				do 
 				{
-					System.out.print("Would you like to insert additional money? (Y/N): ");
+					Display.displayAdditionalMoneyPrompt();
 					yesNoAnswer = scanner.nextLine();
 				}
 				while(!yesNoAnswer.equalsIgnoreCase("yes") && !yesNoAnswer.equalsIgnoreCase("no") && !yesNoAnswer.equalsIgnoreCase("y") && !yesNoAnswer.equalsIgnoreCase("n"));
 			}
-			while (yesNoAnswer.equalsIgnoreCase("y") || yesNoAnswer.equalsIgnoreCase("yes"));		
+			while (yesNoAnswer.equalsIgnoreCase("y") || yesNoAnswer.equalsIgnoreCase("yes"));
+			totalMoneyProvided += totalMoneyInserted;
 		}
-		System.out.println("Thank you.  Please select your item(s).");
-		totalMoneyProvided += totalMoneyInserted;
+		catch (Exception ex)
+		{
+			System.out.println("Problem! Change me! " + ex.getMessage());
+		}
+
 	}
 	
 	public int insertMoneyPrompt(Scanner scanner)
@@ -43,7 +46,7 @@ public class CalculateChange
 		
 		do
 		{
-			System.out.print("Please insert money ($1, $2, $5, $10 only): ");
+			Display.displayMoneyPrompt();
 			value = scanner.nextLine();
 		}
 		while (!value.equals("1") && !value.equals("2") && !value.equals("5") && !value.equals("10"));
@@ -87,7 +90,6 @@ public class CalculateChange
 	public static void main(String[] args)
 	{
 		CalculateChange cc = new CalculateChange();
-		cc.insertMoney();
 		cc.printTotalMoneyProvided();
 		
 		cc.makeChange(4.35);
