@@ -8,9 +8,7 @@ import java.util.Scanner;
 
 public class MainProgram {
 
-	public MainProgram() {
-		
-	}
+	public MainProgram() {}
 
 
 	public static void main(String[] args) throws IOException, FileNotFoundException {
@@ -20,9 +18,8 @@ public class MainProgram {
 		File inputFile = new File("C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\vendingmachine.csv");
 		
 		vendingMachine.fillMachine(inputFile);
-		Display.displayInventory(vendingMachine);
 		
-		/*
+		
 		// CREATE SCANNER TO HANDLE USER INPUT
 		try (Scanner userInput = new Scanner(System.in)) {
 			
@@ -36,18 +33,29 @@ public class MainProgram {
 				userSelection = userInput.nextLine();
 				
 				if (userSelection.equals("1") ) {
-					Display.displayItems(vendingMachine.getInventory());
+				//	Display.displayInventory(vendingMachine.getInventory());
+					String categorySelection;
+					do 
+					{
+						Display.displayVendingMachineCategories();
+						categorySelection = userInput.nextLine();
+					}
+					while (categorySelection != "1" && categorySelection != "2" && categorySelection != "3" && categorySelection != "4");
+					
+					Display.displayCategorizedInventory(vendingMachine.getInventory(), categorySelection);
+					
+					
 					// 2nd level display menu
 				} else if (userSelection.equals("2")) {
 					
 					String userPurchaseSelection = "";
 					do {
 						Display.displayPurchaseMenu(calculator); // change me 
-						userPurchaseSelection = userInput.nextLine();
+								userPurchaseSelection = userInput.nextLine();
 						if (userPurchaseSelection.equals("1")) {
-							calculator.insertMoney(userInput); // TODO REFACTOR TO PASS INPUT SCANNER INTO THIS; LOG
+							vendingMachine.insertMoney(userInput); // TODO REFACTOR TO PASS INPUT SCANNER INTO THIS; LOG
 						} else if (userPurchaseSelection.equals("2")) {
-							Display.displayItems(vendingMachine.getInventory()); // TODO FORMAT THIS TO LOOK PRETTY
+							Display.displayInventory(vendingMachine.getInventory()); // TODO FORMAT THIS TO LOOK PRETTY
 							// TODO COLLECT INPUT FROM USER
 							// TODO IF PRODUCT DOESN'T EXIST OR IF IT'S SOLD OUT, ALERT USER AND RETURN TO PURCHASE MENU; CONTINUE
 							// TODO IF PRODUCT EXISTS, DISPENSE BY PRINTING NAME, COST, MONEY REMAINING, AND MESSAGE; DECREMENT INVENTORY; LOG; UPDATE BALANCE IN CALCULATOR (OR WHEREVER)							
@@ -69,7 +77,6 @@ public class MainProgram {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
 
 		// THIS IS ALL MANUAL TESTING FOR THE LOGGER
 //		Candy nutterButter = new Candy("Nutter Butter", "D1", 2.00);

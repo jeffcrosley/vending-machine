@@ -11,10 +11,9 @@ import java.util.TreeMap;
 
 public class VendingMachine {
 	
-	private double budget;
+	private double balance;
 	// PRIVATE METHODS
 	private Map<String, StockedItem> inventory = new TreeMap<String, StockedItem>();
-	
 	// GETS AND SETS
 	public Map<String, StockedItem> getInventory() 
 	{
@@ -27,9 +26,8 @@ public class VendingMachine {
 	}	
 	
 	// PUBLIC METHODS
-	public String purchaseProduct() {
-		// TODO Auto-generated method stub
-		return null;
+	public void purchaseProduct() {
+		
 	}
 
 	// TODO THIS SHOULD CREATE A NEW REPORT EACH TIME
@@ -74,6 +72,50 @@ public class VendingMachine {
 			inventory.put(slot, item);
 		}		
 		fileScanner.close();
+	}
+	
+	public void insertMoney(Scanner scanner) // pass a Logger object into this (same instance as in our VendingMachine), maybe store as private variable
+	{
+		int totalMoneyInserted = 0;
+		
+		try
+		{	
+			String yesNoAnswer = "";
+			do
+			{
+				totalMoneyInserted += insertMoneyPrompt(scanner);
+				do 
+				{
+					Display.displayAdditionalMoneyPrompt();
+					yesNoAnswer = scanner.nextLine();
+				}
+				while(!yesNoAnswer.equalsIgnoreCase("yes") && !yesNoAnswer.equalsIgnoreCase("no") && !yesNoAnswer.equalsIgnoreCase("y") && !yesNoAnswer.equalsIgnoreCase("n"));
+			}
+			while (yesNoAnswer.equalsIgnoreCase("y") || yesNoAnswer.equalsIgnoreCase("yes"));
+			balance += totalMoneyInserted;
+		}
+		catch (Exception ex)
+		{
+			System.out.println("Problem! Change me! " + ex.getMessage());
+		}
+
+	}
+	
+	public int insertMoneyPrompt(Scanner scanner)
+	{
+		String value;
+		int total = 0;	
+		
+		do
+		{
+			Display.displayMoneyPrompt();
+			value = scanner.nextLine();
+		}
+		while (!value.equals("1") && !value.equals("2") && !value.equals("5") && !value.equals("10"));
+		
+		total = Integer.parseInt(value);
+		
+		return total;
 	}
 	
 }
