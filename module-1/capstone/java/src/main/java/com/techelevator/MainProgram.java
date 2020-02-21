@@ -90,7 +90,11 @@ public class MainProgram {
 //		logger.logChangeOutput(writer, 5.00);
 //		writer.close();
 		
-		// MANUAL TESTING FOR SALES REPORTS
+		// MANUAL TESTING FOR PURCHASE AND SALES REPORTS
+		vendingMachine.purchaseProduct("A1");
+		vendingMachine.purchaseProduct("B1");
+		vendingMachine.purchaseProduct("A2");
+		vendingMachine.purchaseProduct("A2");
 		vendingMachine.generateSalesReport();
 	}
 

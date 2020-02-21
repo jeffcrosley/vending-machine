@@ -4,50 +4,78 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.TreeMap;
 
 public class VendingMachine {
 	
+	// PRIVATE MEMBERS
 	private double balance;
-	// PRIVATE METHODS
-	private Map<String, StockedItem> inventory = new TreeMap<String, StockedItem>();
+	private Map<String, StockedItem> inventory;
+
 	// GETS AND SETS
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
 	public Map<String, StockedItem> getInventory() 
 	{
 		return inventory;
 	}
-
+	
 	// CTOR
 	public VendingMachine() {
 		
 	}	
 	
 	// PUBLIC METHODS
-	public void purchaseProduct() {
-		
+	public void purchaseProduct(String selection) {
+		String outputMessage = "";
+		for (Map.Entry<String, StockedItem> item : this.getInventory().entrySet()) {
+			if (selection.equals(item.getKey())) {
+				item.getValue().setItemsInStock(item.getValue().getItemsInStock() - 1);
+				setBalance(getBalance() - item.getValue().getItem().getPrice()); 
+				outputMessage = item.getValue().getItem().getName() + " " 
+						+ item.getValue().getItem().getPrice() + " "
+						+ this.getBalance() + " "
+						+ item.getValue().getItem().getSound();
+			}
+		}
+		System.out.println(outputMessage);
 	}
 
-	// TODO THIS SHOULD CREATE A NEW REPORT EACH TIME
 	public void generateSalesReport() throws IOException {
-		String filePath = "C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\salesReport.txt";
+		double totalSales = 0;
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmssa");
+		LocalDateTime now = LocalDateTime.now();
+		
+		String filePath = "C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\salesReport" + dtf.format(now) + ".txt";
 		File salesReport = new File(filePath);
 		salesReport.createNewFile();
 		PrintWriter writer = new PrintWriter(salesReport);
 		
-		// TODO FIX FORMATTING
 		for (Map.Entry<String, StockedItem> item : this.getInventory().entrySet()) {
-			writer.println(item.getKey() + " | " + item.getValue());
-		}
+			writer.println(item.getValue().getItem().getName() + " | " + (5 - item.getValue().getItemsInStock()));
+			totalSales += (5 - item.getValue().getItemsInStock()) * item.getValue().getItem().getPrice();
+		}		
+		
+		writer.println("\n");
+		writer.println("Total Sales: $" + totalSales);
 		
 		writer.close();
 	}
 
 	public void fillMachine(File inputFile) throws FileNotFoundException {
 		Scanner fileScanner = new Scanner(inputFile);
-		
+		Map<String, StockedItem> inventory = new TreeMap<String, StockedItem>();
 		while (fileScanner.hasNextLine()) {
 			String[] inventoryData = fileScanner.nextLine().split("[|]");
 			
@@ -70,9 +98,12 @@ public class VendingMachine {
 			}
 			
 			inventory.put(slot, item);
+			this.inventory = inventory;
 		}		
 		fileScanner.close();
 	}
+
+
 	
 	public void insertMoney(Scanner scanner) // pass a Logger object into this (same instance as in our VendingMachine), maybe store as private variable
 	{

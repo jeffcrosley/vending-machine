@@ -1,6 +1,5 @@
 package com.techelevator;
 
-import java.util.Map;
 import java.util.Map.Entry;
 
 public class Display {
@@ -48,7 +47,6 @@ public class Display {
 		System.out.println("(1) Feed Money");
 		System.out.println("(2) Select Product");
 		System.out.println("(3) Finish Transaction\n");
-		// TODO CREATE STATIC METHOD FOR THIS IN CalculateChange
 		System.out.println("Current Money Provided: " + calculateChange.getTotalMoneyProvided());
 	}
 	
@@ -56,6 +54,7 @@ public class Display {
 	{
 		System.out.print("Please insert money ($1, $2, $5, $10 only): ");
 	}
+	
 	public static void displayAdditionalMoneyPrompt()
 	{
 		System.out.print("Would you like to insert additional money? (Y/N): ");
