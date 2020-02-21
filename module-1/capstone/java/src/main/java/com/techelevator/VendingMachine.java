@@ -18,7 +18,8 @@ public class VendingMachine {
 
 	// GETS AND SETS
 	public double getBalance() {
-		return balance;
+		// TODO THIS NEEDS TO BE FIXED; USE A BIGDECIMAL?
+		return (Math.round(balance));
 	}
 
 	public void setBalance(double balance) {
@@ -40,14 +41,17 @@ public class VendingMachine {
 		String outputMessage = "";
 		for (Map.Entry<String, StockedItem> item : this.getInventory().entrySet()) {
 			if (selection.equals(item.getKey())) {
+				// DECREMENT STOCK
 				item.getValue().setItemsInStock(item.getValue().getItemsInStock() - 1);
 				setBalance(getBalance() - item.getValue().getItem().getPrice()); 
-				outputMessage = item.getValue().getItem().getName() + " " 
-						+ item.getValue().getItem().getPrice() + " "
-						+ this.getBalance() + " "
-						+ item.getValue().getItem().getSound();
+				
+				outputMessage = item.getValue().getItem().getSound() + "\n" +
+						item.getValue().getItem().getName() + "\n" 
+						+ "Cost: " + String.format("$%.2f", item.getValue().getItem().getPrice()) + "\n"
+						+ "Balance: " + String.format("$%.2f", this.getBalance());
 			}
 		}
+		System.out.println("----------------------------------------");
 		System.out.println(outputMessage);
 	}
 
@@ -84,7 +88,7 @@ public class VendingMachine {
 			double price = Double.parseDouble(inventoryData[2]);
 			String type = inventoryData[3];
 			
-			StockedItem item;
+			StockedItem item = null;
 			
 			if (type.equalsIgnoreCase("Drink")) {
 				item = new StockedItem(new Beverage(name, slot, price));
@@ -92,20 +96,21 @@ public class VendingMachine {
 				item = new StockedItem(new Candy(name, slot, price));
 			} else if (type.equalsIgnoreCase("Chip")) {
 				item = new StockedItem(new Chips(name, slot, price));
-			} else {
-				// TODO FIX THIS SO IT HANDLES BAD INPUT
+			} else if (type.equalsIgnoreCase("Gum")){
 				item = new StockedItem(new Gum(name, slot, price));
+			} else {
+				System.out.println("INVALID ITEMS IN INPUT FILE");
+				System.exit(1);
 			}
 			
 			inventory.put(slot, item);
+			
 			this.inventory = inventory;
 		}		
 		fileScanner.close();
 	}
-
-
 	
-	public void insertMoney(Scanner scanner) // pass a Logger object into this (same instance as in our VendingMachine), maybe store as private variable
+	public void insertMoney(Scanner scanner)
 	{
 		int totalMoneyInserted = 0;
 		
