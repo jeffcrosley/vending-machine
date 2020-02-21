@@ -1,4 +1,4 @@
-package com.techelevator.view;
+package com.techelevator;
 
 public class Gum extends Item {
 	// CTOR

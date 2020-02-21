@@ -1,6 +1,5 @@
-package com.techelevator.view;
+package com.techelevator;
 
-import java.io.Console;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
