@@ -14,6 +14,10 @@ public class StockedItem {
 		return itemsInStock;
 	}
 	
+	public void setItemsInStock(int itemsInStock) {
+		this.itemsInStock = itemsInStock;
+	}
+	
 	// CTOR
 	public StockedItem(Item item) {
 		this.item = item;

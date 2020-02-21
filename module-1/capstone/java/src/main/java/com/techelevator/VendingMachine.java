@@ -7,23 +7,23 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.TreeMap;
 
 public class VendingMachine {
 	
-	private double balance;
+	
 	// PRIVATE MEMBERS
+	private double balance;
 	private Map<String, StockedItem> inventory;
 	
 	// GETS AND SETS
-	public double getBudget() {
+	public double getBalance() {
 		return balance;
 	}
 
-	public void setBudget(double budget) {
-		this.balance = budget;
+	public void setBalance(double balance) {
+		this.balance = balance;
 	}
 
 	public Map<String, StockedItem> getInventory() 
@@ -37,13 +37,21 @@ public class VendingMachine {
 	}	
 	
 	// PUBLIC METHODS
-	// TODO WRITE THIS METHOD
-	public String purchaseProduct() {
-		// TODO Auto-generated method stub
-		return null;
+	public void purchaseProduct(String selection) {
+		String outputMessage = "";
+		for (Map.Entry<String, StockedItem> item : this.getInventory().entrySet()) {
+			if (selection.equals(item.getKey())) {
+				item.getValue().setItemsInStock(item.getValue().getItemsInStock() - 1);
+				setBalance(getBalance() - item.getValue().getItem().getPrice()); 
+				outputMessage = item.getValue().getItem().getName() + " " 
+						+ item.getValue().getItem().getPrice() + " "
+						+ this.getBalance() + " "
+						+ item.getValue().getItem().getSound();
+			}
+		}
+		System.out.println(outputMessage);
 	}
 
-	// TODO THIS SHOULD CREATE A NEW REPORT EACH TIME
 	public void generateSalesReport() throws IOException {
 		double totalSales = 0;
 		
