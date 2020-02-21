@@ -2,6 +2,8 @@ package com.techelevator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class MainProgram {
@@ -10,14 +12,15 @@ public class MainProgram {
 		
 	}
 
-	public static void main(String[] args) {
-		// CREATE VENDING MACHINE AND CALCULATOR
+	public static void main(String[] args) throws IOException {
+		// CREATE VENDING MACHINE, CALCULATOR, INPUT FILE, AND WRITER
 		VendingMachine vendingMachine = new VendingMachine();
 		CalculateChange calculator = new CalculateChange();
 		File inputFile = new File("C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\vendingmachine.csv");
 		
 		// CREATE SCANNER TO HANDLE USER INPUT
 		try (Scanner userInput = new Scanner(System.in)) {
+			
 			// FILL VENDING MACHINE
 			vendingMachine.fillMachine(inputFile); // TODO LOG
 
@@ -51,7 +54,7 @@ public class MainProgram {
 				} else if (userSelection.equals("3")) {
 					System.out.println("Thank you!");
 				} else if (userSelection.equals("4")) {
-					vendingMachine.generateSalesReport();
+//					vendingMachine.generateSalesReport();
 				}
 				
 			} while (!userSelection.equals("3"));
@@ -61,6 +64,20 @@ public class MainProgram {
 			e.printStackTrace();
 		}
 
+		// THIS IS ALL MANUAL TESTING FOR THE LOGGER
+//		Candy nutterButter = new Candy("Nutter Butter", "D1", 2.00);
+//		Logger logger = new Logger();
+//		String filePath = "C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\log.txt";
+//		File activityLog = new File(filePath);
+//		activityLog.createNewFile();
+//		PrintWriter writer = new PrintWriter(activityLog);
+//		logger.logMoneyInput(writer, 5.00, 10.00);
+//		logger.logItemDispense(writer, nutterButter, 10.00);
+//		logger.logChangeOutput(writer, 5.00);
+//		writer.close();
+		
+		// MANUAL TESTING FOR SALES REPORTS
+		vendingMachine.generateSalesReport();
 	}
 
 	public static void clear() {

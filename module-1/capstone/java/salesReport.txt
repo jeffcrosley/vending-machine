@@ -1,0 +1,16 @@
+A1 | com.techelevator.StockedItem@7530d0a
+A2 | com.techelevator.StockedItem@27bc2616
+A3 | com.techelevator.StockedItem@3941a79c
+A4 | com.techelevator.StockedItem@506e1b77
+B1 | com.techelevator.StockedItem@4fca772d
+B2 | com.techelevator.StockedItem@9807454
+B3 | com.techelevator.StockedItem@3d494fbf
+B4 | com.techelevator.StockedItem@1ddc4ec2
+C1 | com.techelevator.StockedItem@133314b
+C2 | com.techelevator.StockedItem@b1bc7ed
+C3 | com.techelevator.StockedItem@7cd84586
+C4 | com.techelevator.StockedItem@30dae81
+D1 | com.techelevator.StockedItem@1b2c6ec2
+D2 | com.techelevator.StockedItem@4edde6e5
+D3 | com.techelevator.StockedItem@70177ecd
+D4 | com.techelevator.StockedItem@1e80bfe8
