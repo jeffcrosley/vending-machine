@@ -10,95 +10,83 @@ public class MainProgram {
 
 	public MainProgram() {}
 
-
 	public static void main(String[] args) throws IOException, FileNotFoundException {
-		// CREATE VENDING MACHINE, CALCULATOR, INPUT FILE, AND WRITER
+
+		// INSTANTIATE COMPONENTS
 		VendingMachine vendingMachine = new VendingMachine();
-		CalculateChange calculator = new CalculateChange();
+	
 		File inputFile = new File("C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\vendingmachine.csv");
 		
+		Logger logger = new Logger();
+		File log = new File("C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\log.txt");
+		log.createNewFile();
+		PrintWriter logWriter = new PrintWriter(log);
+		
+		Scanner userInput = new Scanner(System.in);
+		
+		
+		// FILL VENDING MACHINE FROM INPUT FILE
 		vendingMachine.fillMachine(inputFile);
 		
-		
-		// CREATE SCANNER TO HANDLE USER INPUT
-		try (Scanner userInput = new Scanner(System.in)) {
+		// MAIN LOOP: DISPLAY MAIN MENU AND GET INPUT
+		boolean exit = false;
+		do {
+			Display.displayMainMenu();
+			String mainMenuChoice = userInput.nextLine();
 			
-			// FILL VENDING MACHINE
-			vendingMachine.fillMachine(inputFile); // TODO LOG
-
-			// DISPLAY MAIN MENU AND GET INPUT
-			String userSelection = "";
-			do {
-				Display.displayMainMenu();
-				userSelection = userInput.nextLine();
-				
-				if (userSelection.equals("1") ) {
-				//	Display.displayInventory(vendingMachine.getInventory());
-					String categorySelection;
-					do 
-					{
-						Display.displayVendingMachineCategories();
-						categorySelection = userInput.nextLine();
+			if (mainMenuChoice.equals("1")) {
+				// DISPLAY AVAILABLE SNACKS
+				Display.displayInventory(vendingMachine.getInventory());
+			} else if (mainMenuChoice.equals("2")) {
+				// GO TO PURCHASE MENU				
+				boolean purchaseExit = false;
+				do {
+					// DISPLAY PURCHASE MENU AND GET INPUT
+					Display.displayPurchaseMenu(vendingMachine);
+					String purchaseMenuChoice = userInput.nextLine();
+					
+					if (purchaseMenuChoice.equals("1")) {
+						// ADD MONEY
+						Display.displayMoneyPrompt();
+						String insertedMoney = userInput.nextLine();
+						vendingMachine.setBalance(vendingMachine.getBalance() + Double.parseDouble(insertedMoney));
+						logger.logMoneyInput(logWriter, Double.parseDouble(insertedMoney), vendingMachine.getBalance());
+					} else if (purchaseMenuChoice.equals("2")) {
+						// PURCHASE ITEMS
+						Display.displayInventory(vendingMachine.getInventory());
+						System.out.println("Please make a selection:");						
+						System.out.println("----------------------------------------");						
+						String selectedItem = userInput.nextLine();
+						vendingMachine.purchaseProduct(selectedItem);
+						logger.logItemDispense(logWriter, vendingMachine.getInventory().get(selectedItem).getItem(), vendingMachine.getBalance());
+						// TODO HANDLE CASES FOR OUT OF STOCK OR NON-EXISTENT PRODUCTS
+						// TODO CHECK FOR NOT ENOUGH MONEY
+					} else if (purchaseMenuChoice.equals("3")) {
+						// MAKE CHANGE AND EXIT TO MAIN MENU
+						logger.logChangeOutput(logWriter, vendingMachine.getBalance());
+						CalculateChange.makeChange(vendingMachine);
+						vendingMachine.setBalance(0);
+						purchaseExit = true;
+						break;
+					} else {
+						Display.displayReprompt();
 					}
-					while (categorySelection != "1" && categorySelection != "2" && categorySelection != "3" && categorySelection != "4");
-					
-					Display.displayCategorizedInventory(vendingMachine.getInventory(), categorySelection);
-					
-					
-					// 2nd level display menu
-				} else if (userSelection.equals("2")) {
-					
-					String userPurchaseSelection = "";
-					do {
-						Display.displayPurchaseMenu(calculator); // change me 
-								userPurchaseSelection = userInput.nextLine();
-						if (userPurchaseSelection.equals("1")) {
-							vendingMachine.insertMoney(userInput); // TODO REFACTOR TO PASS INPUT SCANNER INTO THIS; LOG
-						} else if (userPurchaseSelection.equals("2")) {
-							Display.displayInventory(vendingMachine.getInventory()); // TODO FORMAT THIS TO LOOK PRETTY
-							// TODO COLLECT INPUT FROM USER
-							// TODO IF PRODUCT DOESN'T EXIST OR IF IT'S SOLD OUT, ALERT USER AND RETURN TO PURCHASE MENU; CONTINUE
-							// TODO IF PRODUCT EXISTS, DISPENSE BY PRINTING NAME, COST, MONEY REMAINING, AND MESSAGE; DECREMENT INVENTORY; LOG; UPDATE BALANCE IN CALCULATOR (OR WHEREVER)							
-						} else if (userPurchaseSelection.equals("3") ) {
-							// TODO RETURN CHANGE (FROM CALCULATOR); LOG; UPDATE BALANCE; WILL EXIT THE LOOP
-						}	
-						
-					} while (!userPurchaseSelection.equals("3"));
-					
-				} else if (userSelection.equals("3")) {
-					System.out.println("Thank you!");
-				} else if (userSelection.equals("4")) {
-//					vendingMachine.generateSalesReport();
-				}
-				
-			} while (!userSelection.equals("3"));
+				} while (!purchaseExit);
+			} else if (mainMenuChoice.equals("3")) {
+				// EXIT PROGRAM
+				Display.displayFarewellMessage();
+				exit = true;
+				break;
+			} else if (mainMenuChoice.equals("4")) {
+				// GENERATE SALES REPORT
+				vendingMachine.generateSalesReport();
+			} else {
+				Display.displayReprompt();
+			}
+			
+		} while (!exit);
 		
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// THIS IS ALL MANUAL TESTING FOR THE LOGGER
-//		Candy nutterButter = new Candy("Nutter Butter", "D1", 2.00);
-//		Logger logger = new Logger();
-//		String filePath = "C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\log.txt";
-//		File activityLog = new File(filePath);
-//		activityLog.createNewFile();
-//		PrintWriter writer = new PrintWriter(activityLog);
-//		logger.logMoneyInput(writer, 5.00, 10.00);
-//		logger.logItemDispense(writer, nutterButter, 10.00);
-//		logger.logChangeOutput(writer, 5.00);
-//		writer.close();
-		
-		// MANUAL TESTING FOR PURCHASE AND SALES REPORTS
-		vendingMachine.purchaseProduct("A1");
-		vendingMachine.purchaseProduct("B1");
-		vendingMachine.purchaseProduct("A2");
-		vendingMachine.purchaseProduct("A2");
-		vendingMachine.generateSalesReport();
-	}
-
-	public static void clear() {
-		// TODO CLEAR CONSOLE
+		userInput.close();
+		logWriter.close();		
 	}
 }

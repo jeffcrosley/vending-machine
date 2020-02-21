@@ -1,7 +1,5 @@
 package com.techelevator;
 
-import java.util.Scanner;
-
 public class CalculateChange 
 {
 	private double totalMoneyProvided;
@@ -13,34 +11,36 @@ public class CalculateChange
 	
 	// PUBLIC METHODS
 	
-	public void makeChange(double totalAmountEntered, double totalCost)
+	public static void makeChange(VendingMachine vendingMachine)
 	{
-		double difference = totalAmountEntered - totalCost;
-		double differenceMod = Math.round(difference * 100);
+		double change = Math.round(vendingMachine.getBalance() * 100);
+		
 		int quarterCount = 0;
 		int dimeCount = 0;
 		int nickelCount = 0;
 		
-		while (differenceMod > 0)
+		while (change > 0)
 		{
-			if (differenceMod >= 25)
+			if (change >= 25)
 			{
-				differenceMod -= 25;
+				change -= 25;
 				quarterCount++;
 			}
-			else if (differenceMod >= 10)
+			else if (change >= 10)
 			{
-				differenceMod -= 10;
+				change -= 10;
 				dimeCount++;
 			}
 			else
 			{
-				differenceMod -= 5;
+				change -= 5;
 				nickelCount++;
 			}
 		}
-		
-		System.out.println("Your change is: " + String.format("$%.2f", difference));
+		// TODO FIX THIS TO GET RID OF COINS THAT DON'T EXIST
+		System.out.println("----------------------------------------");
+		System.out.println("Your change is: " + String.format("$%.2f", vendingMachine.getBalance()));
 		System.out.println(String.format("Coinage: %s Quarter(s), %s Dime(s), %s Nickel(s)", quarterCount, dimeCount, nickelCount));
+		System.out.println("----------------------------------------");
 	}
 }
