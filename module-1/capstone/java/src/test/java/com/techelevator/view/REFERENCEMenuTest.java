@@ -12,7 +12,7 @@ import org.junit.runners.MethodSorters;
 import com.techelevator.view.REFERENCEMenu;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class MenuTest {
+public class REFERENCEMenuTest {
 
 	private ByteArrayOutputStream output;
 

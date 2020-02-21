@@ -8,8 +8,10 @@ public class CalculateChange
 	public double getTotalMoneyProvided() { return totalMoneyProvided; }
 	public void printTotalMoneyProvided() { System.out.println(String.format("$%.2f", getTotalMoneyProvided())); }
 	
+	// CTOR
 	public CalculateChange() {}
 	
+	// PUBLIC METHODS
 	public void insertMoney() // pass a Logger object into this (same instance as in our VendingMachine), maybe store as private variable
 	{
 		int totalMoneyInserted = 0;

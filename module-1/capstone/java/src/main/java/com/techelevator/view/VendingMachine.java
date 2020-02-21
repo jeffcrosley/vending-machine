@@ -27,13 +27,8 @@ public class VendingMachine {
 		return null;
 	}
 
-	public void stopProgram() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public File generateSalesReport() {
-		// TODO Auto-generated method stub
+		// TODO CREATE GENERATE SALES REPORT METHOD
 		return null;
 	}
 

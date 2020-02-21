@@ -1,24 +1,70 @@
 package com.techelevator.view;
 
+import java.io.Console;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class MainProgram {
 
 	public MainProgram() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public static void main(String[] args) {
+		// CREATE VENDING MACHINE AND CALCULATOR
 		VendingMachine vendingMachine = new VendingMachine();
+		CalculateChange calculator = new CalculateChange();
 		File inputFile = new File("C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\vendingmachine.csv");
 		
-		try {
-			vendingMachine.fillMachine(inputFile);
+		// CREATE SCANNER TO HANDLE USER INPUT
+		try (Scanner userInput = new Scanner(System.in)) {
+			// FILL VENDING MACHINE
+			vendingMachine.fillMachine(inputFile); // TODO LOG
+
+			// DISPLAY MAIN MENU AND GET INPUT
+			String userSelection = "";
+			do {
+				Display.displayMainMenu();
+				userSelection = userInput.nextLine();
+				
+				if (userSelection.equals("1") ) {
+					Display.displayItems(vendingMachine.getInventory());
+				} else if (userSelection.equals("2")) {
+					
+					String userPurchaseSelection = "";
+					do {
+						Display.displayPurchaseMenu(calculator); // change me 
+						userPurchaseSelection = userInput.nextLine();
+						if (userPurchaseSelection.equals("1")) {
+							calculator.insertMoney(); // TODO REFACTOR TO PASS INPUT SCANNER INTO THIS; LOG
+						} else if (userPurchaseSelection.equals("2")) {
+							Display.displayItems(vendingMachine.getInventory()); // TODO FORMAT THIS TO LOOK PRETTY
+							// TODO COLLECT INPUT FROM USER
+							// TODO IF PRODUCT DOESN'T EXIST OR IF IT'S SOLD OUT, ALERT USER AND RETURN TO PURCHASE MENU; CONTINUE
+							// TODO IF PRODUCT EXISTS, DISPENSE BY PRINTING NAME, COST, MONEY REMAINING, AND MESSAGE; DECREMENT INVENTORY; LOG; UPDATE BALANCE IN CALCULATOR (OR WHEREVER)							
+						} else if (userPurchaseSelection.equals("3") ) {
+							// TODO RETURN CHANGE (FROM CALCULATOR); LOG; UPDATE BALANCE; WILL EXIT THE LOOP
+						}	
+						
+					} while (!userPurchaseSelection.equals("3"));
+					
+				} else if (userSelection.equals("3")) {
+					System.out.println("Thank you!");
+				} else if (userSelection.equals("4")) {
+					vendingMachine.generateSalesReport();
+				}
+				
+			} while (!userSelection.equals("3"));
+		
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 
+	public static void clear() {
+		// TODO CLEAR CONSOLE
+	}
 }
