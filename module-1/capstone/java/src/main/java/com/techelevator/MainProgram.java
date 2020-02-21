@@ -1,9 +1,13 @@
 package com.techelevator;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class MainProgram {
@@ -20,7 +24,13 @@ public class MainProgram {
 		Logger logger = new Logger();
 		File log = new File("C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\log.txt");
 		log.createNewFile();
-		PrintWriter logWriter = new PrintWriter(log);
+		//CREATE WRITER THAT **APPENDS** TO LOG; LOG NEW SESSION
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss a");
+		LocalDateTime now = LocalDateTime.now();			
+		FileWriter fw = new FileWriter(log, true);
+		BufferedWriter bw = new BufferedWriter(fw);
+		PrintWriter logWriter = new PrintWriter(bw);
+		logWriter.println("-------------------- | NEW SESSION | " + dtf.format(now) + " | --------------------");
 		
 		Scanner userInput = new Scanner(System.in);
 		
@@ -55,7 +65,7 @@ public class MainProgram {
 						// PURCHASE ITEMS
 						Display.displayInventory(vendingMachine.getInventory());
 						System.out.println("Please make a selection:");						
-						System.out.println("----------------------------------------");						
+						System.out.println("------------------------------------------");						
 						String selectedItem = userInput.nextLine();
 						vendingMachine.purchaseProduct(selectedItem);
 						logger.logItemDispense(logWriter, vendingMachine.getInventory().get(selectedItem).getItem(), vendingMachine.getBalance());
@@ -85,6 +95,8 @@ public class MainProgram {
 			}
 			
 		} while (!exit);
+		
+		logWriter.println("\n");
 		
 		userInput.close();
 		logWriter.close();		

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 // TODO MAKE THIS WHOLE THING APPEND
+// TODO FIX THIS WITH BIGDECIMAL
 public class Logger {
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss a");
 	LocalDateTime now = LocalDateTime.now();
