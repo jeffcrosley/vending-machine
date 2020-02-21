@@ -59,7 +59,7 @@ public class MainProgram {
 						String selectedItem = userInput.nextLine();
 						vendingMachine.purchaseProduct(selectedItem);
 						logger.logItemDispense(logWriter, vendingMachine.getInventory().get(selectedItem).getItem(), vendingMachine.getBalance());
-						// TODO HANDLE CASES FOR OUT OF STOCK OR NON-EXISTENT PRODUCTS
+						// TODO HANDLE CASE FOR NON-EXISTENT PRODUCTS
 						// TODO CHECK FOR NOT ENOUGH MONEY
 					} else if (purchaseMenuChoice.equals("3")) {
 						// MAKE CHANGE AND EXIT TO MAIN MENU

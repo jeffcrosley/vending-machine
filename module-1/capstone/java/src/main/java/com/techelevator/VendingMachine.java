@@ -42,13 +42,16 @@ public class VendingMachine {
 		for (Map.Entry<String, StockedItem> item : this.getInventory().entrySet()) {
 			if (selection.equals(item.getKey())) {
 				// DECREMENT STOCK
-				item.getValue().setItemsInStock(item.getValue().getItemsInStock() - 1);
-				setBalance(getBalance() - item.getValue().getItem().getPrice()); 
-				
-				outputMessage = item.getValue().getItem().getSound() + "\n" +
-						item.getValue().getItem().getName() + "\n" 
-						+ "Cost: " + String.format("$%.2f", item.getValue().getItem().getPrice()) + "\n"
-						+ "Balance: " + String.format("$%.2f", this.getBalance());
+				boolean isSuccessfulPurchase = item.getValue().removeItem();
+				if (isSuccessfulPurchase)
+				{
+					setBalance(getBalance() - item.getValue().getItem().getPrice()); 
+					
+					outputMessage = item.getValue().getItem().getSound() + "\n" +
+							item.getValue().getItem().getName() + "\n" 
+							+ "Cost: " + String.format("$%.2f", item.getValue().getItem().getPrice()) + "\n"
+							+ "Balance: " + String.format("$%.2f", this.getBalance());
+				}
 			}
 		}
 		System.out.println("----------------------------------------");
@@ -110,6 +113,7 @@ public class VendingMachine {
 		fileScanner.close();
 	}
 	
+	/*
 	public void insertMoney(Scanner scanner)
 	{
 		int totalMoneyInserted = 0;
@@ -134,7 +138,6 @@ public class VendingMachine {
 		{
 			System.out.println("Problem! Change me! " + ex.getMessage());
 		}
-
 	}
 	
 	public int insertMoneyPrompt(Scanner scanner)
@@ -153,5 +156,6 @@ public class VendingMachine {
 		
 		return total;
 	}
+	*/
 	
 }

@@ -14,8 +14,18 @@ public class StockedItem {
 		return itemsInStock;
 	}
 	
-	public void setItemsInStock(int itemsInStock) {
-		this.itemsInStock = itemsInStock;
+	public boolean removeItem() // boolean return?  "True" if able to decrement, false if out of stock.
+	{
+		if (itemsInStock > 0)
+		{
+			itemsInStock--;
+			return true;
+		}
+		else
+		{
+			System.out.println("OUT OF STOCK!");
+			return false;
+		}
 	}
 	
 	// CTOR
