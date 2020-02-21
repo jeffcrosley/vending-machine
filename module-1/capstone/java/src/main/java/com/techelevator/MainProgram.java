@@ -10,12 +10,16 @@ public class MainProgram {
 		
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		// CREATE VENDING MACHINE AND CALCULATOR
 		VendingMachine vendingMachine = new VendingMachine();
 		CalculateChange calculator = new CalculateChange();
 		File inputFile = new File("C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\vendingmachine.csv");
 		
+		vendingMachine.fillMachine(inputFile);
+		Display.displayInventory(vendingMachine);
+		
+		/*
 		// CREATE SCANNER TO HANDLE USER INPUT
 		try (Scanner userInput = new Scanner(System.in)) {
 			// FILL VENDING MACHINE
@@ -29,6 +33,7 @@ public class MainProgram {
 				
 				if (userSelection.equals("1") ) {
 					Display.displayItems(vendingMachine.getInventory());
+					// 2nd level display menu
 				} else if (userSelection.equals("2")) {
 					
 					String userPurchaseSelection = "";
@@ -36,7 +41,7 @@ public class MainProgram {
 						Display.displayPurchaseMenu(calculator); // change me 
 						userPurchaseSelection = userInput.nextLine();
 						if (userPurchaseSelection.equals("1")) {
-							calculator.insertMoney(); // TODO REFACTOR TO PASS INPUT SCANNER INTO THIS; LOG
+							calculator.insertMoney(userInput); // TODO REFACTOR TO PASS INPUT SCANNER INTO THIS; LOG
 						} else if (userPurchaseSelection.equals("2")) {
 							Display.displayItems(vendingMachine.getInventory()); // TODO FORMAT THIS TO LOOK PRETTY
 							// TODO COLLECT INPUT FROM USER
@@ -60,6 +65,7 @@ public class MainProgram {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 
 	}
 

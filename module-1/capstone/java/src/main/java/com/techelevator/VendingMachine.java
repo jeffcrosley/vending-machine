@@ -3,16 +3,19 @@ package com.techelevator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.TreeMap;
 
 public class VendingMachine {
 	
+	private double budget;
 	// PRIVATE METHODS
 	private Map<String, StockedItem> inventory;
 	
 	// GETS AND SETS
-	public Map<String, StockedItem> getInventory() {
+	public Map<String, StockedItem> getInventory() 
+	{
 		return inventory;
 	}
 
@@ -32,8 +35,10 @@ public class VendingMachine {
 		return null;
 	}
 
-	public Map<String, StockedItem> fillMachine(File inputFile) throws FileNotFoundException {
+	public void fillMachine(File inputFile) throws FileNotFoundException 
+	{
 		Scanner fileScanner = new Scanner(inputFile);
+		
 		Map<String, StockedItem> inventory = new TreeMap<String, StockedItem>();
 		
 		while (fileScanner.hasNextLine()) {
@@ -58,9 +63,9 @@ public class VendingMachine {
 			}
 			
 			inventory.put(slot, item);
+			this.inventory = inventory;
 		}		
-		
 		fileScanner.close();
-		return inventory;
 	}
+	
 }
