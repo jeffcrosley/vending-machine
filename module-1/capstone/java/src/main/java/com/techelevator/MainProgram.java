@@ -82,15 +82,14 @@ public class MainProgram {
 						{
 							if (selectedItem.equalsIgnoreCase(entry.getKey()))
 							{
+								validCode = true;
 								if(vendingMachine.getBalance() >= entry.getValue().getItem().getPrice())
 								{
-									validCode = true;
 									vendingMachine.purchaseProduct(selectedItem);
 									logger.logItemDispense(logWriter, vendingMachine.getInventory().get(selectedItem).getItem(), vendingMachine.getBalance());
 								}
 								else
 								{
-									validCode = true;
 									System.out.println("You haven't entered enough money. GIVE ME MORE MONEY!");
 									continue;
 								}

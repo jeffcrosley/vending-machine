@@ -113,49 +113,4 @@ public class VendingMachine {
 		fileScanner.close();
 	}
 	
-	/*
-	public void insertMoney(Scanner scanner)
-	{
-		int totalMoneyInserted = 0;
-		
-		try
-		{	
-			String yesNoAnswer = "";
-			do
-			{
-				totalMoneyInserted += insertMoneyPrompt(scanner);
-				do 
-				{
-					Display.displayAdditionalMoneyPrompt();
-					yesNoAnswer = scanner.nextLine();
-				}
-				while(!yesNoAnswer.equalsIgnoreCase("yes") && !yesNoAnswer.equalsIgnoreCase("no") && !yesNoAnswer.equalsIgnoreCase("y") && !yesNoAnswer.equalsIgnoreCase("n"));
-			}
-			while (yesNoAnswer.equalsIgnoreCase("y") || yesNoAnswer.equalsIgnoreCase("yes"));
-			balance += totalMoneyInserted;
-		}
-		catch (Exception ex)
-		{
-			System.out.println("Problem! Change me! " + ex.getMessage());
-		}
-	}
-	
-	public int insertMoneyPrompt(Scanner scanner)
-	{
-		String value;
-		int total = 0;	
-		
-		do
-		{
-			Display.displayMoneyPrompt();
-			value = scanner.nextLine();
-		}
-		while (!value.equals("1") && !value.equals("2") && !value.equals("5") && !value.equals("10"));
-		
-		total = Integer.parseInt(value);
-		
-		return total;
-	}
-	*/
-	
 }
