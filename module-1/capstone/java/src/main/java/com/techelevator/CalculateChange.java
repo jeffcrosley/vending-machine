@@ -15,7 +15,6 @@ public class CalculateChange
 	
 	public static void makeChange(VendingMachine vendingMachine)
 	{
-		// TODO THIS DOESN'T WORK
 		BigDecimal change = vendingMachine.getBalance().multiply(new BigDecimal("100"));
 		
 		int quarterCount = 0;
@@ -40,10 +39,24 @@ public class CalculateChange
 				nickelCount++;
 			}
 		}
-		// TODO FIX THIS TO GET RID OF COINS THAT DON'T EXIST
+
+		String changeOutput = "";
+		
+		if (quarterCount > 0) {
+			changeOutput += quarterCount + " Quarter(s) ";
+		}
+		
+		if (dimeCount > 0) {
+			changeOutput += dimeCount + " Dime(s) ";
+		}
+		
+		if (nickelCount > 0) {
+			changeOutput += nickelCount + " Nickel(s) ";
+		}
+		
 		System.out.println("----------------------------------------");
 		System.out.println("Your change is: " + String.format("$%.2f", vendingMachine.getBalance()));
-		System.out.println(String.format("Coinage: %s Quarter(s), %s Dime(s), %s Nickel(s)", quarterCount, dimeCount, nickelCount));
+		System.out.println("Coinage: " + changeOutput);
 		System.out.println("----------------------------------------");
 	}
 }

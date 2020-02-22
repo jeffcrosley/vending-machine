@@ -24,12 +24,20 @@ public class Display {
 		System.out.println("----------------------------------------");
 		for (Entry<String, StockedItem> entry : inventory.entrySet())
 		{
-			System.out.println(entry.getKey() + "\t" + entry.getValue().getItem().getName() + "\t\t" + String.format("$%.2f", entry.getValue().getItem().getPrice()));
+			String tabs = "\t";
+			
+			if (entry.getValue().getItem().getName().length() < 8) {
+				tabs += "\t";
+			} 
+			
+			if (entry.getValue().getItem().getName().length() < 16) {
+				tabs += "\t";
+			}
+			System.out.println(entry.getKey() + "\t" + entry.getValue().getItem().getName() + tabs + String.format("$%.2f", entry.getValue().getItem().getPrice()));
 		}	
 		System.out.println("----------------------------------------");		
 	}
 	
-	// clean up formatting
 	public static void displayPurchaseMenu(VendingMachine vendingMachine) {
 		System.out.println("----------------------------------------");
 		System.out.println("Please make a selection:");
@@ -65,28 +73,6 @@ public class Display {
 		System.out.println("Please make a selection of 1-3");
 		System.out.println("----------------------------------------");
 	}
-	
-//	public static void displayCategorizedInventory(Map<String, StockedItem> inventory, String category) 
-//	{
-//		for (Entry<String, StockedItem> entry : inventory.entrySet())
-//		{
-//			if (category.equals("1") && entry.getValue().getItem().getType().equalsIgnoreCase("Drink"))
-//				System.out.println(entry.getKey() + "\t\t" + entry.getValue().getItem().getName() + "\t\t" + entry.getValue().getItem().getPrice());
-//			else if (category.equals("2") && entry.getValue().getItem().getType().equalsIgnoreCase("Chip"))
-//				System.out.println(entry.getKey() + "\t\t" + entry.getValue().getItem().getName() + "\t\t" + entry.getValue().getItem().getPrice());
-//			else if (category.equals("3") && entry.getValue().getItem().getType().equalsIgnoreCase("Candy"))
-//				System.out.println(entry.getKey() + "\t\t" + entry.getValue().getItem().getName() + "\t\t" + entry.getValue().getItem().getPrice());
-//			else if (category.equals("4") && entry.getValue().getItem().getType().equalsIgnoreCase("Gum"))
-//				System.out.println(entry.getKey() + "\t\t" + entry.getValue().getItem().getName() + "\t\t" + entry.getValue().getItem().getPrice());
-//				
-//		}	
-//	}
-	
-//	public static void displayVendingMachineCategories()
-//	{
-//
-//		System.out.println("1. Drinks\n2. Chips\n3. Candy\n4. Gum");
-//		System.out.println("\nSelect a category (1-4): ");
-//	}
+
 	
 }
