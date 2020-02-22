@@ -6,8 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.KeyStore.Entry;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Scanner;
 
 public class MainProgram {
@@ -47,7 +49,8 @@ public class MainProgram {
 			if (mainMenuChoice.equals("1")) {
 				// DISPLAY AVAILABLE SNACKS
 				Display.displayInventory(vendingMachine.getInventory());
-			} else if (mainMenuChoice.equals("2")) {
+			} else if (mainMenuChoice.equals("2")) 
+			{
 				// GO TO PURCHASE MENU				
 				boolean purchaseExit = false;
 				do {
@@ -57,8 +60,14 @@ public class MainProgram {
 					
 					if (purchaseMenuChoice.equals("1")) {
 						// ADD MONEY
-						Display.displayMoneyPrompt();
-						String insertedMoney = userInput.nextLine();
+						String insertedMoney;
+						do 
+						{
+							Display.displayMoneyPrompt();
+							insertedMoney = userInput.nextLine();
+						}
+						while ((!insertedMoney.equals("1") && !insertedMoney.equals("2") && !insertedMoney.equals("5") && !insertedMoney.equals("10")));
+						
 						vendingMachine.setBalance(vendingMachine.getBalance() + Double.parseDouble(insertedMoney));
 						logger.logMoneyInput(logWriter, Double.parseDouble(insertedMoney), vendingMachine.getBalance());
 					} else if (purchaseMenuChoice.equals("2")) {
@@ -66,31 +75,64 @@ public class MainProgram {
 						Display.displayInventory(vendingMachine.getInventory());
 						System.out.println("Please make a selection:");						
 						System.out.println("------------------------------------------");						
-						String selectedItem = userInput.nextLine();
-						vendingMachine.purchaseProduct(selectedItem);
-						logger.logItemDispense(logWriter, vendingMachine.getInventory().get(selectedItem).getItem(), vendingMachine.getBalance());
-						// TODO HANDLE CASE FOR NON-EXISTENT PRODUCTS
-						// TODO CHECK FOR NOT ENOUGH MONEY
-					} else if (purchaseMenuChoice.equals("3")) {
+						String selectedItem = userInput.nextLine().toUpperCase();
+						
+						boolean validCode = false;
+						for (Map.Entry<String, StockedItem> entry : vendingMachine.getInventory().entrySet())
+						{
+							if (selectedItem.equalsIgnoreCase(entry.getKey()))
+							{
+								if(vendingMachine.getBalance() >= entry.getValue().getItem().getPrice())
+								{
+									validCode = true;
+									vendingMachine.purchaseProduct(selectedItem);
+									logger.logItemDispense(logWriter, vendingMachine.getInventory().get(selectedItem).getItem(), vendingMachine.getBalance());
+								}
+								else
+								{
+									validCode = true;
+									System.out.println("You haven't entered enough money. GIVE ME MORE MONEY!");
+									continue;
+								}
+							}
+									
+						}
+						if (!validCode)
+						{
+							System.out.println("Invalid Product Code");
+							continue;
+						}
+					
+					} 
+					else if (purchaseMenuChoice.equals("3")) 
+					{
 						// MAKE CHANGE AND EXIT TO MAIN MENU
 						logger.logChangeOutput(logWriter, vendingMachine.getBalance());
 						CalculateChange.makeChange(vendingMachine);
 						vendingMachine.setBalance(0);
 						purchaseExit = true;
 						break;
-					} else {
+					} 
+					else 
+					{
 						Display.displayReprompt();
 					}
 				} while (!purchaseExit);
-			} else if (mainMenuChoice.equals("3")) {
+			} 
+			else if (mainMenuChoice.equals("3")) 
+			{
 				// EXIT PROGRAM
 				Display.displayFarewellMessage();
 				exit = true;
 				break;
-			} else if (mainMenuChoice.equals("4")) {
+			} 
+			else if (mainMenuChoice.equals("4")) 
+			{
 				// GENERATE SALES REPORT
 				vendingMachine.generateSalesReport();
-			} else {
+			} 
+			else 
+			{
 				Display.displayReprompt();
 			}
 			

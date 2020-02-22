@@ -13,7 +13,7 @@ import java.util.TreeMap;
 public class VendingMachine {
 	
 	// PRIVATE MEMBERS
-	private double balance;
+	private double balance; // BigDecimal
 	private Map<String, StockedItem> inventory;
 
 	// GETS AND SETS
@@ -40,7 +40,7 @@ public class VendingMachine {
 	public void purchaseProduct(String selection) {
 		String outputMessage = "";
 		for (Map.Entry<String, StockedItem> item : this.getInventory().entrySet()) {
-			if (selection.equals(item.getKey())) {
+			if (selection.equalsIgnoreCase(item.getKey())) {
 				// DECREMENT STOCK
 				boolean isSuccessfulPurchase = item.getValue().removeItem();
 				if (isSuccessfulPurchase)
@@ -48,7 +48,7 @@ public class VendingMachine {
 					setBalance(getBalance() - item.getValue().getItem().getPrice()); 
 					
 					outputMessage = item.getValue().getItem().getSound() + "\n" +
-							item.getValue().getItem().getName() + "\n" 
+							"Enjoy your " + item.getValue().getItem().getName() + "!\n" 
 							+ "Cost: " + String.format("$%.2f", item.getValue().getItem().getPrice()) + "\n"
 							+ "Balance: " + String.format("$%.2f", this.getBalance());
 				}

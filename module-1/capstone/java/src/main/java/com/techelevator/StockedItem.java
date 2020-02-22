@@ -23,7 +23,7 @@ public class StockedItem {
 		}
 		else
 		{
-			System.out.println("OUT OF STOCK!");
+			System.out.println("SOLD OUT!");
 			return false;
 		}
 	}
