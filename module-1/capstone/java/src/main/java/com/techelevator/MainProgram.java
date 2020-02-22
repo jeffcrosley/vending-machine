@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.KeyStore.Entry;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -68,8 +68,8 @@ public class MainProgram {
 						}
 						while ((!insertedMoney.equals("1") && !insertedMoney.equals("2") && !insertedMoney.equals("5") && !insertedMoney.equals("10")));
 						
-						vendingMachine.setBalance(vendingMachine.getBalance() + Double.parseDouble(insertedMoney));
-						logger.logMoneyInput(logWriter, Double.parseDouble(insertedMoney), vendingMachine.getBalance());
+						vendingMachine.setBalance(vendingMachine.getBalance().add(new BigDecimal(insertedMoney)));
+						logger.logMoneyInput(logWriter, new BigDecimal(insertedMoney), vendingMachine.getBalance());
 					} else if (purchaseMenuChoice.equals("2")) {
 						// PURCHASE ITEMS
 						Display.displayInventory(vendingMachine.getInventory());
@@ -82,7 +82,7 @@ public class MainProgram {
 						{
 							if (selectedItem.equalsIgnoreCase(entry.getKey()))
 							{
-								if(vendingMachine.getBalance() >= entry.getValue().getItem().getPrice())
+								if(vendingMachine.getBalance().compareTo(entry.getValue().getItem().getPrice()) >= 0)
 								{
 									validCode = true;
 									vendingMachine.purchaseProduct(selectedItem);
@@ -109,7 +109,7 @@ public class MainProgram {
 						// MAKE CHANGE AND EXIT TO MAIN MENU
 						logger.logChangeOutput(logWriter, vendingMachine.getBalance());
 						CalculateChange.makeChange(vendingMachine);
-						vendingMachine.setBalance(0);
+						vendingMachine.setBalance(BigDecimal.ZERO);
 						purchaseExit = true;
 						break;
 					} 
