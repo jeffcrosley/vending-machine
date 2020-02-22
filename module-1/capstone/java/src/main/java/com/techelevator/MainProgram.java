@@ -1,5 +1,3 @@
-// TODO ERROR HANDLING AND TESTING
-
 package com.techelevator;
 
 import java.io.BufferedWriter;

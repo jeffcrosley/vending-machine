@@ -14,7 +14,7 @@ public class StockedItem {
 		return itemsInStock;
 	}
 	
-	public boolean removeItem() // boolean return?  "True" if able to decrement, false if out of stock.
+	public boolean removeItem()
 	{
 		if (itemsInStock > 0)
 		{
