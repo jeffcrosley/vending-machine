@@ -1,5 +1,7 @@
 package com.techelevator;
 
+import java.math.BigDecimal;
+
 public class CalculateChange 
 {
 	private double totalMoneyProvided;
@@ -13,34 +15,48 @@ public class CalculateChange
 	
 	public static void makeChange(VendingMachine vendingMachine)
 	{
-		double change = Math.round(vendingMachine.getBalance() * 100);
+		BigDecimal change = vendingMachine.getBalance().multiply(new BigDecimal("100"));
 		
 		int quarterCount = 0;
 		int dimeCount = 0;
 		int nickelCount = 0;
 		
-		while (change > 0)
+		while (change.compareTo(BigDecimal.ZERO) > 0)
 		{
-			if (change >= 25)
+			if (change.compareTo(new BigDecimal("25")) >= 0)
 			{
-				change -= 25;
+				change = change.subtract(new BigDecimal("25"));
 				quarterCount++;
 			}
-			else if (change >= 10)
+			else if(change.compareTo(new BigDecimal("10")) >= 0)
 			{
-				change -= 10;
+				change = change.subtract(new BigDecimal("10"));
 				dimeCount++;
 			}
 			else
 			{
-				change -= 5;
+				change = change.subtract(new BigDecimal("10"));
 				nickelCount++;
 			}
 		}
-		// TODO FIX THIS TO GET RID OF COINS THAT DON'T EXIST
+
+		String changeOutput = "";
+		
+		if (quarterCount > 0) {
+			changeOutput += quarterCount + " Quarter(s) ";
+		}
+		
+		if (dimeCount > 0) {
+			changeOutput += dimeCount + " Dime(s) ";
+		}
+		
+		if (nickelCount > 0) {
+			changeOutput += nickelCount + " Nickel(s) ";
+		}
+		
 		System.out.println("----------------------------------------");
 		System.out.println("Your change is: " + String.format("$%.2f", vendingMachine.getBalance()));
-		System.out.println(String.format("Coinage: %s Quarter(s), %s Dime(s), %s Nickel(s)", quarterCount, dimeCount, nickelCount));
+		System.out.println("Coinage: " + changeOutput);
 		System.out.println("----------------------------------------");
 	}
 }

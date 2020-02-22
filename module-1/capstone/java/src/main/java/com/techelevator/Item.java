@@ -1,11 +1,13 @@
 package com.techelevator;
 
+import java.math.BigDecimal;
+
 public abstract class Item {
 	
 	// PRIVATE MEMBERS
 	protected String name;
 	protected String slot;
-	protected double price;
+	protected BigDecimal price;
 	protected String type;
 	protected String sound;
 		
@@ -18,7 +20,7 @@ public abstract class Item {
 		return slot;
 	}
 
-	public double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
@@ -31,7 +33,7 @@ public abstract class Item {
 	}
 
 	// CTOR
-	public Item(String name, String slot, double price) {
+	public Item(String name, String slot, BigDecimal price) {
 		this.name = name;
 		this.slot = slot;
 		this.price = price;

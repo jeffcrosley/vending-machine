@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -13,16 +14,15 @@ import java.util.TreeMap;
 public class VendingMachine {
 	
 	// PRIVATE MEMBERS
-	private double balance; // BigDecimal
+	private BigDecimal balance;
 	private Map<String, StockedItem> inventory;
 
 	// GETS AND SETS
-	public double getBalance() {
-		// TODO THIS NEEDS TO BE FIXED; USE A BIGDECIMAL?
-		return (Math.round(balance));
+	public BigDecimal getBalance() {
+		return balance;
 	}
 
-	public void setBalance(double balance) {
+	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
 
@@ -33,7 +33,7 @@ public class VendingMachine {
 	
 	// CTOR
 	public VendingMachine() {
-		
+		this.balance = BigDecimal.ZERO;
 	}	
 	
 	// PUBLIC METHODS
@@ -45,7 +45,7 @@ public class VendingMachine {
 				boolean isSuccessfulPurchase = item.getValue().removeItem();
 				if (isSuccessfulPurchase)
 				{
-					setBalance(getBalance() - item.getValue().getItem().getPrice()); 
+					setBalance(getBalance().subtract(new BigDecimal(String.valueOf(item.getValue().getItem().getPrice())))); 
 					
 					outputMessage = item.getValue().getItem().getSound() + "\n" +
 							"Enjoy your " + item.getValue().getItem().getName() + "!\n" 
@@ -59,7 +59,7 @@ public class VendingMachine {
 	}
 
 	public void generateSalesReport() throws IOException {
-		double totalSales = 0;
+		BigDecimal totalSales = BigDecimal.ZERO;
 		
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmssa");
 		LocalDateTime now = LocalDateTime.now();
@@ -71,7 +71,7 @@ public class VendingMachine {
 		
 		for (Map.Entry<String, StockedItem> item : this.getInventory().entrySet()) {
 			writer.println(item.getValue().getItem().getName() + " | " + (5 - item.getValue().getItemsInStock()));
-			totalSales += (5 - item.getValue().getItemsInStock()) * item.getValue().getItem().getPrice();
+			totalSales = totalSales.add(new BigDecimal("5").subtract(new BigDecimal(item.getValue().getItemsInStock())).multiply(item.getValue().getItem().getPrice())) ;
 		}		
 		
 		writer.println("\n");
@@ -88,7 +88,7 @@ public class VendingMachine {
 			
 			String slot = inventoryData[0];
 			String name = inventoryData[1];
-			double price = Double.parseDouble(inventoryData[2]);
+			BigDecimal price = new BigDecimal(inventoryData[2]);
 			String type = inventoryData[3];
 			
 			StockedItem item = null;
