@@ -32,20 +32,29 @@ public class VendingMachine {
 	}
 	
 	// CTOR
-	public VendingMachine() {
+	public VendingMachine() throws FileNotFoundException {
 		this.balance = BigDecimal.ZERO;
+		this.inventory = fillMachine();
 	}	
 	
 	// PUBLIC METHODS
-	public void purchaseProduct(String selection) {
+	public void insertMoney(BigDecimal insertedMoney, Logger logger, PrintWriter logWriter) {
+		setBalance(this.getBalance().add(insertedMoney));
+		logger.logMoneyInput(logWriter, insertedMoney, getBalance());
+	}
+
+	public void purchaseProduct(String selection, Logger logger, PrintWriter logWriter) {
 		String outputMessage = "";
 		for (Map.Entry<String, StockedItem> item : this.getInventory().entrySet()) {
+			BigDecimal itemPrice = item.getValue().getItem().getPrice();
 			if (selection.equalsIgnoreCase(item.getKey())) {
 				// DECREMENT STOCK
 				boolean isSuccessfulPurchase = item.getValue().removeItem();
 				if (isSuccessfulPurchase)
 				{
-					setBalance(getBalance().subtract(new BigDecimal(String.valueOf(item.getValue().getItem().getPrice())))); 
+					
+					setBalance(getBalance().subtract(itemPrice)); 
+					logger.logItemDispense(logWriter, item.getValue().getItem(), getBalance());
 					
 					outputMessage = item.getValue().getItem().getSound() + "\n" +
 							"Enjoy your " + item.getValue().getItem().getName() + "!\n" 
@@ -80,7 +89,8 @@ public class VendingMachine {
 		writer.close();
 	}
 
-	public void fillMachine(File inputFile) throws FileNotFoundException {
+	public Map<String, StockedItem> fillMachine() throws FileNotFoundException {
+		File inputFile = new File("C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\vendingmachine.csv");	
 		Scanner fileScanner = new Scanner(inputFile);
 		Map<String, StockedItem> inventory = new TreeMap<String, StockedItem>();
 		while (fileScanner.hasNextLine()) {
@@ -106,56 +116,10 @@ public class VendingMachine {
 				System.exit(1);
 			}
 			
-			inventory.put(slot, item);
-			
-			this.inventory = inventory;
-		}		
+			inventory.put(slot, item);			
+		}	
+		
 		fileScanner.close();
+		return inventory;
 	}
-	
-	/*
-	public void insertMoney(Scanner scanner)
-	{
-		int totalMoneyInserted = 0;
-		
-		try
-		{	
-			String yesNoAnswer = "";
-			do
-			{
-				totalMoneyInserted += insertMoneyPrompt(scanner);
-				do 
-				{
-					Display.displayAdditionalMoneyPrompt();
-					yesNoAnswer = scanner.nextLine();
-				}
-				while(!yesNoAnswer.equalsIgnoreCase("yes") && !yesNoAnswer.equalsIgnoreCase("no") && !yesNoAnswer.equalsIgnoreCase("y") && !yesNoAnswer.equalsIgnoreCase("n"));
-			}
-			while (yesNoAnswer.equalsIgnoreCase("y") || yesNoAnswer.equalsIgnoreCase("yes"));
-			balance += totalMoneyInserted;
-		}
-		catch (Exception ex)
-		{
-			System.out.println("Problem! Change me! " + ex.getMessage());
-		}
-	}
-	
-	public int insertMoneyPrompt(Scanner scanner)
-	{
-		String value;
-		int total = 0;	
-		
-		do
-		{
-			Display.displayMoneyPrompt();
-			value = scanner.nextLine();
-		}
-		while (!value.equals("1") && !value.equals("2") && !value.equals("5") && !value.equals("10"));
-		
-		total = Integer.parseInt(value);
-		
-		return total;
-	}
-	*/
-	
 }

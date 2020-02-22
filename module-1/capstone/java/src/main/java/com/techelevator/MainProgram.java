@@ -20,15 +20,11 @@ public class MainProgram {
 
 		// CREATE PROGRAM COMPONENTS
 		VendingMachine vendingMachine = new VendingMachine();		
-		Scanner userInput = new Scanner(System.in);
-		File inputFile = new File("C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\vendingmachine.csv");		
+		Scanner userInput = new Scanner(System.in);			
 		Logger logger = new Logger();
 		File log = new File("C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\log.txt");
 		log.createNewFile();
 		PrintWriter logWriter = createWriter(log);
-		
-		// FILL VENDING MACHINE
-		vendingMachine.fillMachine(inputFile);
 		
 		// MAIN PROGRAM LOOP
 		mainLoop(userInput, vendingMachine, logWriter, logger);
@@ -82,7 +78,12 @@ public class MainProgram {
 			Display.displayPurchaseMenu(vendingMachine);
 			String purchaseMenuChoice = userInput.nextLine();					
 			if (purchaseMenuChoice.equals("1")) {
-				insertMoney(userInput, vendingMachine, logger, logWriter);
+				BigDecimal insertedMoney;
+				do {
+					Display.displayMoneyPrompt();
+					insertedMoney = new BigDecimal(userInput.nextLine());
+				} while ((!insertedMoney.equals(new BigDecimal("1")) && !insertedMoney.equals(new BigDecimal("2")) && !insertedMoney.equals(new BigDecimal("5")) && !insertedMoney.equals(new BigDecimal("10"))));
+				vendingMachine.insertMoney(insertedMoney, logger, logWriter);
 			} else if (purchaseMenuChoice.equals("2")) {
 				purchaseItems(vendingMachine, userInput, logger, logWriter);					
 			} else if (purchaseMenuChoice.equals("3")) {
@@ -95,26 +96,13 @@ public class MainProgram {
 			
 		} while (!purchaseExit);
 	}
-
-	public static void insertMoney(Scanner userInput, VendingMachine vendingMachine, Logger logger, PrintWriter logWriter) {
-		String insertedMoney;
-		do 
-		{
-			Display.displayMoneyPrompt();
-			insertedMoney = userInput.nextLine();
-		}
-		while ((!insertedMoney.equals("1") && !insertedMoney.equals("2") && !insertedMoney.equals("5") && !insertedMoney.equals("10")));
-		
-		vendingMachine.setBalance(vendingMachine.getBalance().add(new BigDecimal(insertedMoney)));
-		logger.logMoneyInput(logWriter, new BigDecimal(insertedMoney), vendingMachine.getBalance());
-	}
-	
+	// TODO MOVE TO VENDING MACHINE
 	public static void makeChange(Logger logger, PrintWriter logWriter, VendingMachine vendingMachine) {
 		logger.logChangeOutput(logWriter, vendingMachine.getBalance());
 		CalculateChange.makeChange(vendingMachine);
 		vendingMachine.setBalance(BigDecimal.ZERO);
 	}
-		
+	// TODO DISENTANGLE WITH VENDING MACHINE
 	public static void purchaseItems(VendingMachine vendingMachine, Scanner userInput, Logger logger, PrintWriter logWriter) {
 		// PURCHASE ITEMS
 		Display.displayInventory(vendingMachine.getInventory());
@@ -130,8 +118,7 @@ public class MainProgram {
 				if(vendingMachine.getBalance().compareTo(entry.getValue().getItem().getPrice()) >= 0)
 				{
 					validCode = true;
-					vendingMachine.purchaseProduct(selectedItem);
-					logger.logItemDispense(logWriter, vendingMachine.getInventory().get(selectedItem).getItem(), vendingMachine.getBalance());
+					vendingMachine.purchaseProduct(selectedItem, logger, logWriter);
 				}
 				else
 				{
