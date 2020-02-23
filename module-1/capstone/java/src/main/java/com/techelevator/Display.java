@@ -38,6 +38,22 @@ public class Display {
 		System.out.println("----------------------------------------");		
 	}
 	
+	public static void displayCategorizedInventory(Map<String, StockedItem> inventory, String category) 
+	{
+		for (Entry<String, StockedItem> entry : inventory.entrySet())
+		{
+			if (category.equals("1") && entry.getValue().getItem().getType().equalsIgnoreCase("Drink"))
+				System.out.println(entry.getKey() + "\t\t" + entry.getValue().getItem().getName() + "\t\t" + entry.getValue().getItem().getPrice());
+			else if (category.equals("2") && entry.getValue().getItem().getType().equalsIgnoreCase("Chip"))
+				System.out.println(entry.getKey() + "\t\t" + entry.getValue().getItem().getName() + "\t\t" + entry.getValue().getItem().getPrice());
+			else if (category.equals("3") && entry.getValue().getItem().getType().equalsIgnoreCase("Candy"))
+				System.out.println(entry.getKey() + "\t\t" + entry.getValue().getItem().getName() + "\t\t" + entry.getValue().getItem().getPrice());
+			else if (category.equals("4") && entry.getValue().getItem().getType().equalsIgnoreCase("Gum"))
+				System.out.println(entry.getKey() + "\t\t" + entry.getValue().getItem().getName() + "\t\t" + entry.getValue().getItem().getPrice());
+				
+		}	
+	}
+	
 	public static void displayPurchaseMenu(VendingMachine vendingMachine) {
 		System.out.println("----------------------------------------");
 		displaySelectionPrompt();

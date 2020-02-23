@@ -23,6 +23,8 @@ public class MainProgram {
 	public static void main(String[] args) throws IOException, FileNotFoundException {
 
 		// CREATE PROGRAM COMPONENTS
+		
+		// TODO: Wrap (nearly) everything in try-with/resources / catch blocks, passing in one or multiple of the scanners/printwriters.
 		VendingMachine vendingMachine = new VendingMachine();		
 		Scanner userInput = new Scanner(System.in);			
 		Logger logger = new Logger();
@@ -33,16 +35,18 @@ public class MainProgram {
 		PrintWriter logWriter = createWriter(log); // Once we remove createWriter, we'll
 		
 		// MAIN PROGRAM LOOP
-		
-		// TODO: Wrap in try-with/resources / catch blocks, passing in one or multiple of the scanners/printwriters.
+	
 		boolean exit = false;
 		do {
 			Display.displayMainMenu();
 			String mainMenuChoice = userInput.nextLine();
 			
 			if (mainMenuChoice.equals("1")) {
+				//TODO: Implement categorized inventory (re-added to Display class)
 				Display.displayInventory(vendingMachine.getInventory());
 			} else if (mainMenuChoice.equals("2")) {
+				
+				//TODO: If purchase menu selection != 1-3, should we re-prompt purchase menu, or kick back to main menu?
 				selectPurchaseMenu(vendingMachine, userInput, logger, logWriter);
 			} else if (mainMenuChoice.equals("3")) {
 				Display.displayFarewellMessage();
