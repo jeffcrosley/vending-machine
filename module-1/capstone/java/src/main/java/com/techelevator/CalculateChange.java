@@ -3,16 +3,15 @@ package com.techelevator;
 import java.math.BigDecimal;
 
 public class CalculateChange 
-{
-	private double totalMoneyProvided;
-	public double getTotalMoneyProvided() { return totalMoneyProvided; }
-	public void printTotalMoneyProvided() { System.out.println(String.format("$%.2f", getTotalMoneyProvided())); }
-	
+{	
 	// CTOR
+	
+	//TODO: Make this "ChangeCalculator" or something.  CalculateChange sounds like a method rather than a class.  
 	public CalculateChange() {}
 	
 	// PUBLIC METHODS
 	
+	//TODO: (Not important/dire -- bells & whistles): Create an interface (that has a getBalance()) that would handle much more than just Vending Machines that VM implements. 
 	public static void makeChange(VendingMachine vendingMachine)
 	{
 		BigDecimal change = vendingMachine.getBalance().multiply(new BigDecimal("100"));
@@ -54,6 +53,8 @@ public class CalculateChange
 			changeOutput += nickelCount + " Nickel(s) ";
 		}
 		
+		//TODO: For tests, we could set return type to "String" and return this.
+		//TODO: Put this in Display class?
 		System.out.println("----------------------------------------");
 		System.out.println("Your change is: " + String.format("$%.2f", vendingMachine.getBalance()));
 		System.out.println("Coinage: " + changeOutput);

@@ -14,6 +14,10 @@ import java.util.Scanner;
 
 public class MainProgram {
 	
+	// PRIVATE CONSTANTS (File path)
+	
+	private static final String LOG_FILE_PATH = "C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\log.txt";
+	
 	public MainProgram() {}
 
 	public static void main(String[] args) throws IOException, FileNotFoundException {
@@ -22,31 +26,15 @@ public class MainProgram {
 		VendingMachine vendingMachine = new VendingMachine();		
 		Scanner userInput = new Scanner(System.in);			
 		Logger logger = new Logger();
-		File log = new File("C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\log.txt");
+		//TODO: Have Logger accept a PrintWriter to it's constructor (logWriter, as created in the createWriter method (passing in BW/FW))
+		// We could then make it print a "NEW SESSION" every time the program runs & a new logger is created (using Display.displayNewLog(), as below in createWriter()
+		File log = new File(LOG_FILE_PATH);
 		log.createNewFile();
-		PrintWriter logWriter = createWriter(log);
+		PrintWriter logWriter = new PrintWriter(new BufferedWriter(new FileWriter(log, true))); // Once we remove createWriter, we'll
 		
 		// MAIN PROGRAM LOOP
-		mainLoop(userInput, vendingMachine, logWriter, logger);
 		
-		// CLOSE RESOURCES
-		userInput.close();
-		logWriter.close();
-	}
-	
-	public static PrintWriter createWriter(File log) throws IOException {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss a");
-		LocalDateTime now = LocalDateTime.now();			
-		FileWriter fw = new FileWriter(log, true);
-		BufferedWriter bw = new BufferedWriter(fw);
-		PrintWriter logWriter = new PrintWriter(bw);
-		// PRINTS A NEW SESSION TO THE LOG
-		logWriter.println("-------------------- | NEW SESSION | " + dtf.format(now) + " | --------------------");
-		return logWriter;
-	}
-
-	public static void mainLoop(Scanner userInput, VendingMachine vendingMachine, PrintWriter logWriter, Logger logger) throws IOException {
-		
+		// TODO: Wrap in try-with/resources / catch blocks, passing in one or multiple of the scanners/printwriters.
 		boolean exit = false;
 		do {
 			Display.displayMainMenu();
@@ -55,7 +43,7 @@ public class MainProgram {
 			if (mainMenuChoice.equals("1")) {
 				Display.displayInventory(vendingMachine.getInventory());
 			} else if (mainMenuChoice.equals("2")) {
-				purchaseMenuLoop(vendingMachine, userInput, logger, logWriter);
+				selectPurchaseMenu(vendingMachine, userInput, logger, logWriter);
 			} else if (mainMenuChoice.equals("3")) {
 				Display.displayFarewellMessage();
 				exit = true;
@@ -68,72 +56,53 @@ public class MainProgram {
 			
 		} while (!exit);
 		
-		logWriter.println("\n");				
+		logWriter.println("\n");	
+		
+		// TODO: Wrap main() in try-with-resources for autoclosing & exception handling.
+		userInput.close();
+		logWriter.close();
+	}
+	
+	//TODO: See notes above. We can get rid of this method & majority of its code by refactoring.
+	public static void createWriter(File log) throws IOException 
+	{	
+		// We will eventually delete all of this, using the logWriter above (declared the same way), passing a PrintWriter into the Logger constructor
+		// Only keeping this currently because of the logWriter.println(Display.displayNewLog()), which I plan to move into the Logger's constructor eventually.
+		PrintWriter logWriter = new PrintWriter(new BufferedWriter(new FileWriter(log, true)));
+		logWriter.println(Display.displayNewLog());
 	}
 
-	public static void purchaseMenuLoop(VendingMachine vendingMachine, Scanner userInput, Logger logger, PrintWriter logWriter) {
+	//TODO -- Should this also be in VendingMachine? I don't think so, but could see an argument for it.
+	public static void selectPurchaseMenu(VendingMachine vendingMachine, Scanner userInput, Logger logger, PrintWriter logWriter) 
+	{
 		boolean purchaseExit = false;
 		do {
-
 			Display.displayPurchaseMenu(vendingMachine);
 			String purchaseMenuChoice = userInput.nextLine();					
-			if (purchaseMenuChoice.equals("1")) {
+			if (purchaseMenuChoice.equals("1")) 
+			{
 				BigDecimal insertedMoney;
-				do {
+				//TODO -- is forcing a money insertion the best option here? Maybe we just kick then back out to Purchase Menu if invalid money entered rather than force user to enter something valid
+				do 
+				{
 					Display.displayMoneyPrompt();
 					insertedMoney = new BigDecimal(userInput.nextLine());
-				} while ((!insertedMoney.equals(new BigDecimal("1")) && !insertedMoney.equals(new BigDecimal("2")) && !insertedMoney.equals(new BigDecimal("5")) && !insertedMoney.equals(new BigDecimal("10"))));
+				} 
+				while ((!insertedMoney.equals(new BigDecimal("1")) && !insertedMoney.equals(new BigDecimal("2")) && !insertedMoney.equals(new BigDecimal("5")) && !insertedMoney.equals(new BigDecimal("10"))));
 				vendingMachine.insertMoney(insertedMoney, logger, logWriter);
-			} else if (purchaseMenuChoice.equals("2")) {
-				purchaseItems(vendingMachine, userInput, logger, logWriter);					
-			} else if (purchaseMenuChoice.equals("3")) {
-				makeChange(logger, logWriter, vendingMachine);
+			} 
+			else if (purchaseMenuChoice.equals("2")) 
+			{
+				vendingMachine.purchaseProduct(logger, logWriter, userInput);					
+			} 
+			else if (purchaseMenuChoice.equals("3")) 
+			{
+				vendingMachine.makeChange(logger, logWriter);
 				purchaseExit = true;
 				break;
-			} else {
-				Display.displayReprompt();
-			}
-			
-		} while (!purchaseExit);
+			} 
+			else { Display.displayReprompt(); }
+		} 
+		while (!purchaseExit);
 	}
-	// TODO MOVE TO VENDING MACHINE
-	public static void makeChange(Logger logger, PrintWriter logWriter, VendingMachine vendingMachine) {
-		logger.logChangeOutput(logWriter, vendingMachine.getBalance());
-		CalculateChange.makeChange(vendingMachine);
-		vendingMachine.setBalance(BigDecimal.ZERO);
-	}
-	// TODO DISENTANGLE WITH VENDING MACHINE
-	public static void purchaseItems(VendingMachine vendingMachine, Scanner userInput, Logger logger, PrintWriter logWriter) {
-		// PURCHASE ITEMS
-		Display.displayInventory(vendingMachine.getInventory());
-		System.out.println("Please make a selection:");						
-		System.out.println("------------------------------------------");						
-		String selectedItem = userInput.nextLine().toUpperCase();
-		
-		boolean validCode = false;
-		for (Map.Entry<String, StockedItem> entry : vendingMachine.getInventory().entrySet())
-		{
-			if (selectedItem.equalsIgnoreCase(entry.getKey()))
-			{
-				if(vendingMachine.getBalance().compareTo(entry.getValue().getItem().getPrice()) >= 0)
-				{
-					validCode = true;
-					vendingMachine.purchaseProduct(selectedItem, logger, logWriter);
-				}
-				else
-				{
-					validCode = true;
-					System.out.println("You haven't entered enough money. GIVE ME MORE MONEY!");
-					continue;
-				}
-			}
-					
-		}
-		if (!validCode)
-		{
-			System.out.println("Invalid Product Code");
-		}
-	
-	}
-
 }

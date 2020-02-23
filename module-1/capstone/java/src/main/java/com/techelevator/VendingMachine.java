@@ -16,64 +16,91 @@ public class VendingMachine {
 	// PRIVATE MEMBERS
 	private BigDecimal balance;
 	private Map<String, StockedItem> inventory;
+	private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmssa");
+	private static LocalDateTime now = LocalDateTime.now();
+	
+	// PRIVATE CONSTANTS (File Paths)
+	private static final String INVENTORY_FILE_PATH = "C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\vendingmachine.csv";
+	private static final String SALES_REPORT_FILE_PATH = "C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\salesReport" + dtf.format(now) + ".txt";
 
 	// GETS AND SETS
-	public BigDecimal getBalance() {
-		return balance;
-	}
+	public BigDecimal getBalance() { return balance; }
+	public Map<String, StockedItem> getInventory() { return inventory; }
 
-	public void setBalance(BigDecimal balance) {
-		this.balance = balance;
-	}
+	// Made this private given we're now only calling it within the VM class (and we don't want people setting the balance manually)
+	private void setBalance(BigDecimal balance) { this.balance = balance; }
 
-	public Map<String, StockedItem> getInventory() 
-	{
-		return inventory;
-	}
-	
 	// CTOR
-	public VendingMachine() throws FileNotFoundException {
-		this.balance = BigDecimal.ZERO;
-		this.inventory = fillMachine();
+	
+	//TODO We should not have this throw an exception if we can avoid it.  Wrap in try/catch.
+	public VendingMachine() throws FileNotFoundException
+	{
+		balance = BigDecimal.ZERO;
+		inventory = fillMachine();
 	}	
 	
 	// PUBLIC METHODS
-	public void insertMoney(BigDecimal insertedMoney, Logger logger, PrintWriter logWriter) {
+	
+	//TODO: Wrap in try-catch (not w/ resources)
+	public void insertMoney(BigDecimal insertedMoney, Logger logger, PrintWriter logWriter) 
+	{
 		setBalance(this.getBalance().add(insertedMoney));
 		logger.logMoneyInput(logWriter, insertedMoney, getBalance());
 	}
 
-	public void purchaseProduct(String selection, Logger logger, PrintWriter logWriter) {
-		String outputMessage = "";
-		for (Map.Entry<String, StockedItem> item : this.getInventory().entrySet()) {
-			BigDecimal itemPrice = item.getValue().getItem().getPrice();
-			if (selection.equalsIgnoreCase(item.getKey())) {
-				// DECREMENT STOCK
-				boolean isSuccessfulPurchase = item.getValue().removeItem();
-				if (isSuccessfulPurchase)
+	//TODO: Wrap in try/catch (not w/ resources so that we don't close scanner/printwriter)
+	public void purchaseProduct(Logger logger, PrintWriter logWriter, Scanner userInput) 
+	{
+		Display.displayInventory(getInventory());
+		Display.displaySelectionPrompt();
+		String selectedItem = userInput.nextLine().toUpperCase();
+		
+		boolean validCode = false;
+		for (Map.Entry<String, StockedItem> item : getInventory().entrySet())
+		{
+			if (selectedItem.equalsIgnoreCase(item.getKey()))
+			{
+				validCode = true;
+				BigDecimal itemPrice = item.getValue().getItem().getPrice();
+				
+				if(getBalance().compareTo(itemPrice) >= 0)
 				{
+					// DECREMENT STOCK
+					boolean isSuccessfulPurchase = item.getValue().removeItem();
+					System.out.println("----------------------------------------");
 					
-					setBalance(getBalance().subtract(itemPrice)); 
-					logger.logItemDispense(logWriter, item.getValue().getItem(), getBalance());
-					
-					outputMessage = item.getValue().getItem().getSound() + "\n" +
-							"Enjoy your " + item.getValue().getItem().getName() + "!\n" 
-							+ "Cost: " + String.format("$%.2f", item.getValue().getItem().getPrice()) + "\n"
-							+ "Balance: " + String.format("$%.2f", this.getBalance());
+					if (isSuccessfulPurchase)
+					{
+						setBalance(getBalance().subtract(itemPrice)); 
+						logger.logItemDispense(logWriter, item.getValue().getItem(), getBalance());
+						
+						// TODO this can be turned into its own method (Item as param/arg)
+						System.out.println(item.getValue().getItem().getSound() + "\n" +
+										"Enjoy your " + item.getValue().getItem().getName() + "!\n" 
+										+ "Cost: " + String.format("$%.2f", itemPrice) + "\n"
+										+ "Balance: " + String.format("$%.2f", getBalance()));
+					}
 				}
-			}
+				else
+				{
+					System.out.println("Please insert additional money to purchase your selected product."); // calculate difference between entered & cost of item
+					continue;
+				}
+			}	
 		}
-		System.out.println("----------------------------------------");
-		System.out.println(outputMessage);
+		if (!validCode)
+		{
+			System.out.println("Invalid Product Code");
+		}
 	}
 
+	//TODO: Wrap in try-with-resources + catch various exceptions
 	public void generateSalesReport() throws IOException {
+		
+		//TODO: Try-with-resources / catch IO Exception
 		BigDecimal totalSales = BigDecimal.ZERO;
 		
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmssa");
-		LocalDateTime now = LocalDateTime.now();
-		
-		String filePath = "C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\salesReport" + dtf.format(now) + ".txt";
+		String filePath = SALES_REPORT_FILE_PATH;
 		File salesReport = new File(filePath);
 		salesReport.createNewFile();
 		PrintWriter writer = new PrintWriter(salesReport);
@@ -89,8 +116,10 @@ public class VendingMachine {
 		writer.close();
 	}
 
-	public Map<String, StockedItem> fillMachine() throws FileNotFoundException {
-		File inputFile = new File("C:\\Users\\Student\\workspace\\java-module-1-capstone-team-0\\module-1\\capstone\\java\\vendingmachine.csv");	
+	//TODO: Wrap in try-with-resources + catch various exceptions
+	public Map<String, StockedItem> fillMachine() throws FileNotFoundException 
+	{
+		File inputFile = new File(INVENTORY_FILE_PATH);	
 		Scanner fileScanner = new Scanner(inputFile);
 		Map<String, StockedItem> inventory = new TreeMap<String, StockedItem>();
 		while (fileScanner.hasNextLine()) {
@@ -121,5 +150,12 @@ public class VendingMachine {
 		
 		fileScanner.close();
 		return inventory;
+	}
+	
+	//TODO: Wrap in try/catch (not w/ resources so we don't close our printWriter)
+	public void makeChange(Logger logger, PrintWriter logWriter) {
+		logger.logChangeOutput(logWriter, getBalance());
+		CalculateChange.makeChange(this);
+		setBalance(BigDecimal.ZERO);
 	}
 }

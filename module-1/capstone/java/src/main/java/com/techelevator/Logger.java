@@ -5,12 +5,19 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Logger {
-	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss a");
-	LocalDateTime now = LocalDateTime.now();
+public class Logger 
+{
+	private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss a");
+	private static LocalDateTime now = LocalDateTime.now();
+	private PrintWriter writer;
 		
-	public Logger() {
-		
+	public Logger() {}
+	
+	//TODO Per the message in Main, pass a PrintWriter into constructor. Store it as private variable. Use that to reference methods below.
+	// This will be used for passing in our PrintWriter. Need to update a lot of classes/methods for this & haven't gotten there yet.
+	public Logger(PrintWriter writer) 
+	{
+		this.writer = writer;
 	}
 	
 	public void logMoneyInput(PrintWriter writer, BigDecimal newMoney, BigDecimal balance) {

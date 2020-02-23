@@ -1,19 +1,19 @@
 package com.techelevator;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Map.Entry;
 
 public class Display {
 
 	// CTOR
-	public Display() {
-		
-	}
+	public Display() {}
 
 	// PUBLIC METHODS
 	public static void displayMainMenu() {
-		System.out.println("Please make a selection:");
-		System.out.println("(1) Display Vending Machine Items");
+		displaySelectionPrompt();
+		System.out.println("\n\n(1) Display Vending Machine Items");
 		System.out.println("(2) Purchase");
 		System.out.println("(3) Exit");
 		System.out.println("----------------------------------------");
@@ -40,11 +40,11 @@ public class Display {
 	
 	public static void displayPurchaseMenu(VendingMachine vendingMachine) {
 		System.out.println("----------------------------------------");
-		System.out.println("Please make a selection:");
-		System.out.println("(1) Feed Money");
+		displaySelectionPrompt();
+		System.out.println("\n\n(1) Feed Money");
 		System.out.println("(2) Select Product");
-		System.out.println("(3) Finish Transaction\n");
-		System.out.println("Current Money Provided: " + String.format("$%.2f", vendingMachine.getBalance()));
+		System.out.println("(3) Finish Transaction");
+		System.out.println("\nCurrent Money Provided: " + String.format("$%.2f", vendingMachine.getBalance()));
 		System.out.println("----------------------------------------");
 	}
 	
@@ -72,6 +72,27 @@ public class Display {
 		System.out.println("----------------------------------------");
 		System.out.println("Please make a selection of 1-3");
 		System.out.println("----------------------------------------");
+	}
+	
+	public static void displaySelectionPrompt()
+	{
+		System.out.print("Please make a selection: ");						
+	}
+	
+	public static String displayNewLog()
+	{
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss a");
+		LocalDateTime now = LocalDateTime.now();
+		return "-------------------- | NEW SESSION | " + dtf.format(now) + " | --------------------";
+		
+	}
+	
+	
+	public static void clearScreen() {  
+
+		   System.out.print("\033[H\033[2J"); 
+		   System.out.flush();  
+
 	}
 
 	
