@@ -11,7 +11,7 @@ public class CalculateChange
 	
 	// PUBLIC METHODS
 	
-	//TODO: (Not important/dire -- bells & whistles): Create an interface (that has a getBalance()) that would handle much more than just Vending Machines that VM implements. 
+	//TODO: (Not important/dire -- bells & whistles): Create an interface for Vending Machine & other semi-related things (that has a getBalance()) that would allow this class/method handle much more than just Vending Machines.
 	public static void makeChange(VendingMachine vendingMachine)
 	{
 		BigDecimal change = vendingMachine.getBalance().multiply(new BigDecimal("100"));
