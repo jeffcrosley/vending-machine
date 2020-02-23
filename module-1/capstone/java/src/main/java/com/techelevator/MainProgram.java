@@ -30,7 +30,7 @@ public class MainProgram {
 		// We could then make it print a "NEW SESSION" every time the program runs & a new logger is created (using Display.displayNewLog(), as below in createWriter()
 		File log = new File(LOG_FILE_PATH);
 		log.createNewFile();
-		PrintWriter logWriter = new PrintWriter(new BufferedWriter(new FileWriter(log, true))); // Once we remove createWriter, we'll
+		PrintWriter logWriter = createWriter(log); // Once we remove createWriter, we'll
 		
 		// MAIN PROGRAM LOOP
 		
@@ -64,12 +64,13 @@ public class MainProgram {
 	}
 	
 	//TODO: See notes above. We can get rid of this method & majority of its code by refactoring.
-	public static void createWriter(File log) throws IOException 
+	public static PrintWriter createWriter(File log) throws IOException 
 	{	
 		// We will eventually delete all of this, using the logWriter above (declared the same way), passing a PrintWriter into the Logger constructor
 		// Only keeping this currently because of the logWriter.println(Display.displayNewLog()), which I plan to move into the Logger's constructor eventually.
 		PrintWriter logWriter = new PrintWriter(new BufferedWriter(new FileWriter(log, true)));
 		logWriter.println(Display.displayNewLog());
+		return logWriter;
 	}
 
 	//TODO -- Should this also be in VendingMachine? I don't think so, but could see an argument for it.

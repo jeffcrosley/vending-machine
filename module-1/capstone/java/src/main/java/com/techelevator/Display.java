@@ -83,7 +83,7 @@ public class Display {
 	{
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss a");
 		LocalDateTime now = LocalDateTime.now();
-		return "-------------------- | NEW SESSION | " + dtf.format(now) + " | --------------------";
+		return "-------------------- | NEW SESSION: " + dtf.format(now) + " | --------------------";
 		
 	}
 	
