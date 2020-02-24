@@ -11,7 +11,8 @@ public class Display {
 	public Display() {}
 
 	// PUBLIC METHODS
-	public static void displayMainMenu() {
+	public static void displayMainMenu() 
+	{
 		displaySelectionPrompt();
 		System.out.println("\n\n(1) Display Vending Machine Items");
 		System.out.println("(2) Purchase");
@@ -38,7 +39,7 @@ public class Display {
 		System.out.println("----------------------------------------");		
 	}
 	
-	public static void displayCategorizedInventory(Map<String, StockedItem> inventory, String category) 
+	public static void displayCategorizedInventory(Map<String, StockedItem> inventory, String category) throws NullPointerException
 	{
 		for (Entry<String, StockedItem> entry : inventory.entrySet())
 		{
@@ -50,7 +51,6 @@ public class Display {
 				System.out.println(entry.getKey() + "\t\t" + entry.getValue().getItem().getName() + "\t\t" + entry.getValue().getItem().getPrice());
 			else if (category.equals("4") && entry.getValue().getItem().getType().equalsIgnoreCase("Gum"))
 				System.out.println(entry.getKey() + "\t\t" + entry.getValue().getItem().getName() + "\t\t" + entry.getValue().getItem().getPrice());
-				
 		}	
 	}
 	
@@ -102,14 +102,4 @@ public class Display {
 		return "-------------------- | NEW SESSION: " + dtf.format(now) + " | --------------------";
 		
 	}
-	
-	
-	public static void clearScreen() {  
-
-		   System.out.print("\033[H\033[2J"); 
-		   System.out.flush();  
-
-	}
-
-	
 }

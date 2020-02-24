@@ -42,14 +42,14 @@ public class VendingMachine {
 	// PUBLIC METHODS
 	
 	//TODO: Wrap in try-catch (not w/ resources)
-	public void insertMoney(BigDecimal insertedMoney, Logger logger, PrintWriter logWriter) 
+	public void insertMoney(BigDecimal insertedMoney, Logger logger)
 	{
 		setBalance(this.getBalance().add(insertedMoney));
-		logger.logMoneyInput(logWriter, insertedMoney, getBalance());
+		logger.logMoneyInput(insertedMoney, getBalance());
 	}
 
 	//TODO: Wrap in try/catch (not w/ resources so that we don't close scanner/printwriter)
-	public void purchaseProduct(Logger logger, PrintWriter logWriter, Scanner userInput) 
+	public void purchaseProduct(Logger logger, Scanner userInput) throws NullPointerException
 	{
 		Display.displayInventory(getInventory());
 		Display.displaySelectionPrompt();
@@ -72,7 +72,7 @@ public class VendingMachine {
 					if (isSuccessfulPurchase)
 					{
 						setBalance(getBalance().subtract(itemPrice)); 
-						logger.logItemDispense(logWriter, item.getValue().getItem(), getBalance());
+						logger.logItemDispense(item.getValue().getItem(), getBalance());
 						
 						// TODO this can be turned into its own method (Item as param/arg)
 						System.out.println(item.getValue().getItem().getSound() + "\n" +
@@ -92,12 +92,12 @@ public class VendingMachine {
 		{
 			System.out.println("Invalid Product Code");
 		}
+		
 	}
 
 	//TODO: Wrap in try-with-resources + catch various exceptions
-	public void generateSalesReport() throws IOException {
-		
-		//TODO: Try-with-resources / catch IO Exception
+	public void generateSalesReport() throws IOException 
+	{
 		BigDecimal totalSales = BigDecimal.ZERO;
 		
 		String filePath = SALES_REPORT_FILE_PATH;
@@ -153,8 +153,8 @@ public class VendingMachine {
 	}
 	
 	//TODO: Wrap in try/catch (not w/ resources so we don't close our printWriter)
-	public void makeChange(Logger logger, PrintWriter logWriter) {
-		logger.logChangeOutput(logWriter, getBalance());
+	public void makeChange(Logger logger) {
+		logger.logChangeOutput(getBalance());
 		CalculateChange.makeChange(this);
 		setBalance(BigDecimal.ZERO);
 	}

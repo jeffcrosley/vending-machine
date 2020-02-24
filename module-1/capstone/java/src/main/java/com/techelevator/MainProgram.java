@@ -20,94 +20,105 @@ public class MainProgram {
 	
 	public MainProgram() {}
 
-	public static void main(String[] args) throws IOException, FileNotFoundException {
-
-		// CREATE PROGRAM COMPONENTS
-		
-		// TODO: Wrap (nearly) everything in try-with/resources / catch blocks, passing in one or multiple of the scanners/printwriters.
-		VendingMachine vendingMachine = new VendingMachine();		
-		Scanner userInput = new Scanner(System.in);			
-		Logger logger = new Logger();
-		//TODO: Have Logger accept a PrintWriter to it's constructor (logWriter, as created in the createWriter method (passing in BW/FW))
-		// We could then make it print a "NEW SESSION" every time the program runs & a new logger is created (using Display.displayNewLog(), as below in createWriter()
-		File log = new File(LOG_FILE_PATH);
-		log.createNewFile();
-		PrintWriter logWriter = createWriter(log); // Once we remove createWriter, we'll
-		
-		// MAIN PROGRAM LOOP
-	
-		boolean exit = false;
-		do {
-			Display.displayMainMenu();
-			String mainMenuChoice = userInput.nextLine();
-			
-			if (mainMenuChoice.equals("1")) {
-				//TODO: Implement categorized inventory (re-added to Display class)
-				Display.displayInventory(vendingMachine.getInventory());
-			} else if (mainMenuChoice.equals("2")) {
-				
-				//TODO: If purchase menu selection != 1-3, should we re-prompt purchase menu, or kick back to main menu?
-				selectPurchaseMenu(vendingMachine, userInput, logger, logWriter);
-			} else if (mainMenuChoice.equals("3")) {
-				Display.displayFarewellMessage();
-				exit = true;
-				break;
-			} else if (mainMenuChoice.equals("4")) {
-				vendingMachine.generateSalesReport();
-			} else {
-				Display.displayReprompt();
-			}
-			
-		} while (!exit);
-		
-		logWriter.println("\n");	
-		
-		// TODO: Wrap main() in try-with-resources for autoclosing & exception handling.
-		userInput.close();
-		logWriter.close();
-	}
-	
-	//TODO: See notes above. We can get rid of this method & majority of its code by refactoring.
-	public static PrintWriter createWriter(File log) throws IOException 
-	{	
-		// We will eventually delete all of this, using the logWriter above (declared the same way), passing a PrintWriter into the Logger constructor
-		// Only keeping this currently because of the logWriter.println(Display.displayNewLog()), which I plan to move into the Logger's constructor eventually.
-		PrintWriter logWriter = new PrintWriter(new BufferedWriter(new FileWriter(log, true)));
-		logWriter.println(Display.displayNewLog());
-		return logWriter;
-	}
-
-	//TODO -- Should this also be in VendingMachine? I don't think so, but could see an argument for it.
-	public static void selectPurchaseMenu(VendingMachine vendingMachine, Scanner userInput, Logger logger, PrintWriter logWriter) 
+	public static void main(String[] args)
 	{
-		boolean purchaseExit = false;
-		do {
-			Display.displayPurchaseMenu(vendingMachine);
-			String purchaseMenuChoice = userInput.nextLine();					
-			if (purchaseMenuChoice.equals("1")) 
+		// CREATE PROGRAM COMPONENTS
+		try (Scanner userInput = new Scanner(System.in))
+		{
+			VendingMachine vendingMachine = new VendingMachine();	
+			File log = new File(LOG_FILE_PATH);
+			log.createNewFile();
+
+			try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new FileWriter(log, true))))
 			{
-				BigDecimal insertedMoney;
-				//TODO -- is forcing a money insertion the best option here? Maybe we just kick then back out to Purchase Menu if invalid money entered rather than force user to enter something valid
-				do 
-				{
-					Display.displayMoneyPrompt();
-					insertedMoney = new BigDecimal(userInput.nextLine());
+				Logger logger = new Logger(logWriter);
+				
+				// MAIN PROGRAM LOOP
+			
+				boolean exit = false;
+				do {
+					Display.displayMainMenu();
+					String mainMenuChoice = userInput.nextLine();
+					
+					if (mainMenuChoice.equals("1")) {
+						//TODO: Implement categorized inventory (re-added to Display class)
+						Display.displayInventory(vendingMachine.getInventory());
+					} else if (mainMenuChoice.equals("2")) {
+						
+						//TODO: If purchase menu selection != 1-3, should we re-prompt purchase menu, or kick back to main menu?
+						selectPurchaseMenu(vendingMachine, userInput, logger);
+					} else if (mainMenuChoice.equals("3")) {
+						Display.displayFarewellMessage();
+						exit = true;
+						break;
+					} else if (mainMenuChoice.equals("4")) {
+						vendingMachine.generateSalesReport();
+					} else {
+						Display.displayReprompt();
+					}
+					
 				} 
-				while ((!insertedMoney.equals(new BigDecimal("1")) && !insertedMoney.equals(new BigDecimal("2")) && !insertedMoney.equals(new BigDecimal("5")) && !insertedMoney.equals(new BigDecimal("10"))));
-				vendingMachine.insertMoney(insertedMoney, logger, logWriter);
+				while (!exit);
+				
+				logWriter.println("\n");
+			}
+		}
+		catch (FileNotFoundException ex)
+		{
+			System.out.println("File Not Found: " + ex.getMessage());
+		}
+		catch (IOException ex)
+		{
+			System.out.println("Input/Output Failure: " + ex.getMessage());
+		}
+		catch (NullPointerException ex)
+		{
+			System.out.println("Null Pointer: Attempted to reference an uninstantiated object or field. " + ex.getMessage());
+		}
+		catch (Exception ex)
+		{
+			System.out.println(ex.toString() + " " + ex.getMessage());
+		}
+	
+	}
+	
+	public static void selectPurchaseMenu(VendingMachine vendingMachine, Scanner userInput, Logger logger) 
+	{
+		try
+		{
+			boolean purchaseExit = false;
+			do {
+				Display.displayPurchaseMenu(vendingMachine);
+				String purchaseMenuChoice = userInput.nextLine();					
+				if (purchaseMenuChoice.equals("1")) 
+				{
+					BigDecimal insertedMoney;
+					//TODO -- is forcing a money insertion the best option here? Maybe we just kick then back out to Purchase Menu if invalid money entered rather than force user to enter something valid
+					do 
+					{
+						Display.displayMoneyPrompt();
+						insertedMoney = new BigDecimal(userInput.nextLine());
+					} 
+					while ((!insertedMoney.equals(new BigDecimal("1")) && !insertedMoney.equals(new BigDecimal("2")) && !insertedMoney.equals(new BigDecimal("5")) && !insertedMoney.equals(new BigDecimal("10"))));
+					vendingMachine.insertMoney(insertedMoney, logger);
+				} 
+				else if (purchaseMenuChoice.equals("2")) 
+				{
+					vendingMachine.purchaseProduct(logger, userInput);					
+				} 
+				else if (purchaseMenuChoice.equals("3")) 
+				{
+					vendingMachine.makeChange(logger);
+					purchaseExit = true;
+					break;
+				} 
+				else { Display.displayReprompt(); }
 			} 
-			else if (purchaseMenuChoice.equals("2")) 
-			{
-				vendingMachine.purchaseProduct(logger, logWriter, userInput);					
-			} 
-			else if (purchaseMenuChoice.equals("3")) 
-			{
-				vendingMachine.makeChange(logger, logWriter);
-				purchaseExit = true;
-				break;
-			} 
-			else { Display.displayReprompt(); }
-		} 
-		while (!purchaseExit);
+			while (!purchaseExit);
+		}
+		catch (Exception ex)
+		{
+			System.out.println("Exception thrown: " + ex.getMessage());
+		}
 	}
 }
