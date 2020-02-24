@@ -102,4 +102,11 @@ public class Display {
 		return "-------------------- | NEW SESSION: " + dtf.format(now) + " | --------------------";
 		
 	}
+	
+	public static void displayChangeOutput(VendingMachine vendingMachine, String changeOutput) {
+		System.out.println("----------------------------------------");
+		System.out.println("Your change is: " + String.format("$%.2f", vendingMachine.getBalance()));
+		System.out.println("Coinage: " + changeOutput);
+		System.out.println("----------------------------------------");
+	}
 }

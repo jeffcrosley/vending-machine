@@ -32,11 +32,15 @@ public class VendingMachine {
 
 	// CTOR
 	
-	//TODO We should not have this throw an exception if we can avoid it.  Wrap in try/catch.
-	public VendingMachine() throws FileNotFoundException
+	public VendingMachine()
 	{
 		balance = BigDecimal.ZERO;
-		inventory = fillMachine();
+		try {
+			inventory = fillMachine();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}	
 	
 	// PUBLIC METHODS
@@ -155,7 +159,48 @@ public class VendingMachine {
 	//TODO: Wrap in try/catch (not w/ resources so we don't close our printWriter)
 	public void makeChange(Logger logger) {
 		logger.logChangeOutput(getBalance());
-		CalculateChange.makeChange(this);
+		
+		BigDecimal change = getBalance().multiply(new BigDecimal("100"));
+		
+		int quarterCount = 0;
+		int dimeCount = 0;
+		int nickelCount = 0;
+		
+		while (change.compareTo(BigDecimal.ZERO) > 0)
+		{
+			if (change.compareTo(new BigDecimal("25")) >= 0)
+			{
+				change = change.subtract(new BigDecimal("25"));
+				quarterCount++;
+			}
+			else if(change.compareTo(new BigDecimal("10")) >= 0)
+			{
+				change = change.subtract(new BigDecimal("10"));
+				dimeCount++;
+			}
+			else
+			{
+				change = change.subtract(new BigDecimal("10"));
+				nickelCount++;
+			}
+		}
+
+		String changeOutput = "";
+		
+		if (quarterCount > 0) {
+			changeOutput += quarterCount + " Quarter(s) ";
+		}
+		
+		if (dimeCount > 0) {
+			changeOutput += dimeCount + " Dime(s) ";
+		}
+		
+		if (nickelCount > 0) {
+			changeOutput += nickelCount + " Nickel(s) ";
+		}
+		
+		Display.displayChangeOutput(this, changeOutput);
+		
 		setBalance(BigDecimal.ZERO);
 	}
 }
